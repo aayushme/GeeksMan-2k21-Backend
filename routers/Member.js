@@ -5,5 +5,5 @@ const controller=require('../controllers/members-controller')
 router.post('/createmember',middleware,controller.createmember);
 router.get('/getmember',controller.getmembers);
 router.patch('updatemember/:mid',middleware,controller.updatemember);
-router.delete('deletemember/:mid',middleware,controller.deletemember);
+router.delete('deletemember',middleware,controller.deletemember);
 module.exports=router

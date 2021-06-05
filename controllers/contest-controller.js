@@ -71,7 +71,6 @@ if(!contest){
 res.status(200).json({contest:contest.toObject({getters:true})})
 }
 
-
 const getallcontests=async (req,res,next)=>{
 let contests;
 try{
@@ -86,20 +85,14 @@ res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:t
 }
 
 const deletecontest=async (req,res,next)=>{
-const contestid=req.params.cid
-let contest;
+const contestids=req.body.ids
 try{
-contest=await Contest.findById(contestid)
+await Contest.deleteMany({id:contestids})
 }catch(err){
 return next(new HttpError('Could not delete the contest,please try again later',500))
 }
 if(!contest){
     return next(new HttpError('Could not find a contest with that id',404))
-}
-try{
-await contest.remove()
-}catch(err){
-return next(new HttpError('Could not delete the contest,please try again later',500))
 }
 res.status(200).json({message:'Deleted successfully'})
 }

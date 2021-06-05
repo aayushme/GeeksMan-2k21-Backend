@@ -8,7 +8,7 @@ router.post(
 );
 router.get("/contests",contestcontroller.getallcontests);
 router.get("/contest/:cid",contestcontroller.getcontest)
-router.delete("/deletecontest/:cid",middleware,contestcontroller.deletecontest);
+router.delete("/deletecontest",middleware,contestcontroller.deletecontest);
 router.patch("/updatedetails/:cid",middleware,contestcontroller.updatecontest);
 
 module.exports=router

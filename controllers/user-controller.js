@@ -173,23 +173,14 @@ const getuserbyid = async (req, res, next) => {
   res.status(200).json({ user: user.toObject({ getters: true }) });
 }
 const deleteuser = async (req, res, next) => {
-  const userid = req.params.uid
-  let user;
-  try {
-    user = await User.findById(userid)
-  } catch (err) {
-    const error = new HttpError('could not delete the user,please try again later', 500)
+  let userids=req.body.ids
+  try{
+   await User.deleteMany({id:[userids]})
+  }catch{
+    const error=new HttpError('Could not delete the user,please try again later',500)
     return next(error)
   }
-  if (!user) {
-    return next(new HttpError('Could not find a user with that id', 404))
-  }
-  try {
-    await user.remove()
-  } catch (err) {
-    return next(new HttpError('Could not delete the user,please try again later', 500))
-  }
-  res.status(200).json({message :'User deleted' })
+  res.status(200).json({message:"Deleted Successfully !"})
 }
 const getallusers = async (req, res, next) => {
   let users;
@@ -267,7 +258,7 @@ const getUserContest = async (req, res, next) => {
   try {
     userwithcontests = await User.findById(uid).populate('usercontestdetail')
   } catch (e) {
-    return res.status(404).json({ error: e })
+    return res.status(404).json({message:e })
   }
   if (!userwithcontests || userwithcontests.usercontestdetail.length === 0) {
     return res.status(404).json({message:'There are no available previous contests done by you.' })

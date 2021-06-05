@@ -102,15 +102,11 @@ const getadmin=async (req,res,next)=>{
 }
 
 const deleteadmin=async (req,res,next)=>{
-  let admin;
-  let adminid=req.params.aid
+  let adminids=req.body.ids
   try{
-   admin=await Admin.findById(adminid)
+   await Admin.deleteMany({id:[adminids]})
   }catch(e){
     return res.status(500).json({e})
-  }
-  if(admin){
-    await admin.remove()
   }
   return res.json({message:"Deleted Successfully!!"})
 }

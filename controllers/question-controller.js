@@ -164,21 +164,13 @@ const updatequestion=async (req,res,next)=>{
 }
 
 const deletequestion=async (req,res,next)=>{
+    let questionids=req.body.ids
     try {
-       const questionid=req.params.id
-       const question=await Question.findById(questionid)
-       if(!question){
-           return res.status(404).json({message:'Could not find a question with that id'})
-       }
-       try{
-       await question.remove()
-       res.status(200).json({message:'question deleted successfully'})
-       }catch(e){
-          return res.status(500).json({error:e})
-       }
+       await Question.deleteMany({id:questionids})
     } catch (error) {
-        return res.status(500).json({"error":error})
+        return res.status(500).json({message:"Could not delete the questions,please try again later"})
     }
+    return res.status(200).json({message:"Deleted Successfully!"})
 }
 module.exports={
     getcontestquestions,

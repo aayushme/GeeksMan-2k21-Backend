@@ -16,15 +16,11 @@ return res.status(200).json({pendinguser:pendinguser.map(pending=>pending.toObje
 
 //This route deletes the pending user with given id
 const deletePendinguser=async (req,res,next)=>{
-let pendinguser;
-const {pendingid}=req.body
+let pendinguserids=req.body.ids
 try{
-pendinguser=await PendingUser.findById(pendingid)
+pendinguser=await PendingUser.deleteMany({id:pendinguserids})
 }catch(e){
 return res.status(500).json({message:e})
-}
-if(pendinguser){
-    await pendinguser.remove();
 }
 return res.status(200).json({message:"Deleted successfully !!"})
 }
