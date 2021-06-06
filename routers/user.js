@@ -28,7 +28,7 @@ router.get("/users/getuser/:uid", usercontroller.getuserbyid);
 //return all the present users
 router.get("/users",usercontroller.getallusers)
 //delete users [an array of id's is passed from client]
-router.delete("/users/deleteuser",middleware,usercontroller.deleteuser);
+router.delete("/deleteuser",middleware,usercontroller.deleteuser);
 //update user by id
 router.patch("/users/updateuser/:uid", usercontroller.updateuser);
 //Route to generate email for resetting password

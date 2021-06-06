@@ -10,5 +10,5 @@ router.get('/questions/:cid',questioncontroller.getcontestquestions)
 router.get('/questions/:id',questioncontroller.getquestionbyid)
 router.post('/questions/:cid',middleware,questioncontroller.createquestion)  
 router.patch('/questions/:id',questioncontroller.updatequestion)
-router.delete('/questions',questioncontroller.deletequestion)
+router.delete('/deletequestions',questioncontroller.deletequestion)
 module.exports=router
