@@ -18,7 +18,7 @@ return res.status(200).json({pendinguser:pendinguser.map(pending=>pending.toObje
 const deletePendinguser=async (req,res,next)=>{
 let pendinguserids=req.body.ids
 try{
-pendinguser=await PendingUser.deleteMany({id:pendinguserids})
+pendinguser=await PendingUser.deleteMany({_id:{$in:pendinguserids}})
 }catch(e){
 return res.status(500).json({message:e})
 }

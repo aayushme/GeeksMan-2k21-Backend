@@ -166,7 +166,7 @@ const updatequestion=async (req,res,next)=>{
 const deletequestion=async (req,res,next)=>{
     let questionids=req.body.ids
     try {
-       await Question.deleteMany({id:questionids})
+       await Question.deleteMany({id:{$in:questionids}})
     } catch (error) {
         return res.status(500).json({message:"Could not delete the questions,please try again later"})
     }

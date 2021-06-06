@@ -87,7 +87,7 @@ res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:t
 const deletecontest=async (req,res,next)=>{
 const contestids=req.body.ids
 try{
-await Contest.deleteMany({id:contestids})
+await Contest.deleteMany({_id:{$in:contestids}})
 }catch(err){
 return next(new HttpError('Could not delete the contest,please try again later',500))
 }
