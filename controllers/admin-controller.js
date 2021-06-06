@@ -104,7 +104,7 @@ const getadmin=async (req,res,next)=>{
 const deleteadmin=async (req,res,next)=>{
   let adminids=req.body.ids
   try{
-   await Admin.deleteMany({id:[adminids]})
+   await Admin.deleteMany({_id:[adminids]})
   }catch(e){
     return res.status(500).json({e})
   }
