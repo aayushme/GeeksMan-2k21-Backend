@@ -94,7 +94,7 @@ return next(new HttpError('Could not delete the contest,please try again later',
 if(!contest){
     return next(new HttpError('Could not find a contest with that id',404))
 }
-res.status(200).json({message:'Deleted successfully'})
+res.json({message:'Deleted successfully'})
 }
 
 module.exports={

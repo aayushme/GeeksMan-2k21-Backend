@@ -65,7 +65,6 @@ const registerforcontest = async (req, res, next) => {
     year: user.year,
     branch: user.Branch,
   });
-  // await newuser.save();
   let totalslots = contest.totalslots.length;
   let givenslot;
 
@@ -93,47 +92,48 @@ const registerforcontest = async (req, res, next) => {
         break;
       }
     }
-    if (givenslot) {
-      var api_key = process.env.EMAIL_KEY;
-      var domain = "geeksmanjcbust.in";
-      var mailgun = require("mailgun-js")({ apiKey: api_key, domain: domain });
-      var data = {
-        from: "<cedept@geeksmanjcbust.in>",
-        to: user.email,
-        subject: "Thanks for Registering",
-        html: `
-          <h2>Dear ${user.name},<h2>
-          <p>Thank you for registering to ${
-            contest.Contestname
-          } on GeeksCode by Geeksman-The Coding Society of JC Bose UST. Your registration has been received</p>
-          <p>You registered with this email: ${user.email}.<p>
-          Your designated slot is ${givenslot}
-          Date and time of slot:-${
-            contest.Totalslots[givenslot - 1].timeanddateofslot
-          }
-          <p>You can simply take the test by clicking at this link at you designated time slot.<a href="https://geeksmanjcbust.in/contests/${
-            contest.Contestname
-          }">Link</a>
-          If you forgot your password, simply hit "Forgot password" and you'll be prompted to reset it.</p>
-          If you have any questions leading up to the event, feel free to reply to cedept@geeksmanjcbust.in.<br>
-          We look forward to seeing you on EVENT DATE!<br>
-          Kind Regards,<br>
-          Geeksman Family
-          `,
-      };
-      mailgun.messages().send(data, function (error, body) {
-        if (error) {
-          console.log(error);
-        }
-        console.log(body);
-      });
-    }
-    return res
-      .status(200)
-      .json({ message: "You have been registered,please check your email" });
+    
   } catch (e) {
     return res.status(500).json({message: e });
   }
+  if (givenslot) {
+    var api_key = process.env.EMAIL_KEY;
+    var domain = "geeksmanjcbust.in";
+    var mailgun = require("mailgun-js")({ apiKey: api_key, domain: domain });
+    var data = {
+      from: "<cedept@geeksmanjcbust.in>",
+      to: user.email,
+      subject: "Thanks for Registering",
+      html: `
+        <h2>Dear ${user.name},<h2>
+        <p>Thank you for registering to ${
+          contest.contestname
+        } on GeeksCode by Geeksman-The Coding Society of JC Bose UST. Your registration has been received</p>
+        <p>You registered with this email: ${user.email}.<p>
+        Your designated slot is ${givenslot}
+        Date and time of slot:-${
+          contest.totalslots[givenslot - 1].timeanddateofslot
+        }
+        <p>You can simply take the test by clicking at this link at you designated time slot.<a href="https://geeksmanjcbust.in/contests/${
+          contest.contestname
+        }">Link</a>
+        If you forgot your password, simply hit "Forgot password" and you'll be prompted to reset it.</p>
+        If you have any questions leading up to the event, feel free to reply to cedept@geeksmanjcbust.in.<br>
+        We look forward to seeing you on EVENT DATE!<br>
+        Kind Regards,<br>
+        Geeksman Family
+        `,
+    };
+    mailgun.messages().send(data, function (error, body) {
+      if (error) {
+        console.log(error);
+      }
+      console.log(body);
+    });
+  }
+  return res
+    .status(200)
+    .json({ message: "You have been registered,please check your email" });
 };
 const updatedetails = async (req, res, next) => {
   try {
