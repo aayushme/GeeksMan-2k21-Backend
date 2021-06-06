@@ -65,7 +65,7 @@ const registerforcontest = async (req, res, next) => {
     year: user.year,
     branch: user.Branch,
   });
-  await newuser.save();
+  // await newuser.save();
   let totalslots = contest.totalslots.length;
   let givenslot;
 
@@ -83,7 +83,7 @@ const registerforcontest = async (req, res, next) => {
         newuser.slot.slotno = givenslot;
         newuser.slot.slotstarttime = contest.totalslots[i].slotstarttime;
         newuser.slot.slotendtime = contest.totalslots[i].slotendtime;
-        newuser.contestname = contest.Contestname;
+        newuser.contestname = contest.contestname;
         await newuser.save({ session: sess });
         contest.registeredusers.push(newuser);
         user.usercontestdetail.push(newuser);
@@ -132,7 +132,7 @@ const registerforcontest = async (req, res, next) => {
       .status(200)
       .json({ message: "You have been registered,please check your email" });
   } catch (e) {
-    return res.status(500).json({ error: e });
+    return res.status(500).json({message: e });
   }
 };
 const updatedetails = async (req, res, next) => {
