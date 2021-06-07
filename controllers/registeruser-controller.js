@@ -30,8 +30,8 @@ const registerforcontest = async (req, res, next) => {
   try {
     contest = await Contest.findById(cid);
     user = await User.findById(uid);
-    if (user) {
-      let registereduser = await RegisteredUser.findOne({ email: user.email });
+    if (user){
+      let registereduser = await RegisteredUser.findOne({ email: user.email,contestname:contest.contestname });
       if (registereduser) {
         return res.json({
           message: "you are already registered.",
