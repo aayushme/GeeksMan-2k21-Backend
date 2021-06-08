@@ -1,5 +1,9 @@
 const { validationResult } = require('express-validator')
 const User = require('../models/User.js')
+const api_key = process.env.EMAIL_KEY;
+const domain = 'geeksmanjcbust.in';
+const mailgun = require('mailgun-js')
+const mg=mailgun({ apiKey: api_key, domain: domain });
 const HttpError = require('../models/Http-error')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -40,9 +44,7 @@ const signuphandler = async (req, res, next) => {
   });
   try {
     await newpendinguser.save();
-    var api_key = process.env.EMAIL_KEY;
-    var domain = 'geeksmanjcbust.in';
-    var mailgun = require('mailgun-js')({ apiKey: api_key, domain: domain });
+    
     let hash = newpendinguser._id
     console.log(hash)
     var data = {
@@ -55,20 +57,20 @@ const signuphandler = async (req, res, next) => {
     <p>Click below to confirm your email address:
     <a href="${process.env.BACKEND_URL}activate/user/${hash}">link</a><br>If you have problems, please paste the above URL into your web browser.</p>`
     };
-    mailgun.messages().send(data, function (error, body) {
+    mg.messages().send(data, function (error, body) {
       if (error) {
         console.log(error);
       }
       console.log(body);
     });
-    return res.json({message:'You have been registered,check your email address' })
+    return res.status(201).json({message:'You have been registered,check your email address' })
   } catch (err) {
     const error = new HttpError(
       "Signing up failed,please try again later",
       500
     );
     return next(error);
-  }
+  } 
 }
 const loginhandler = async (req, res, next) => {
   const { email, password } = req.body;
@@ -83,7 +85,7 @@ const loginhandler = async (req, res, next) => {
   if (!existingUser) {
     const error = new HttpError(
       "Invalid credentials,could not log you in",
-      401
+      400
     );
     return next(error);
   }
@@ -120,7 +122,7 @@ const loginhandler = async (req, res, next) => {
   }
   await existingUser.save();
   res
-    .status(201)
+    .status(200)
     .json({
       userid: existingUser.id,
       email: existingUser.email,
@@ -294,12 +296,13 @@ const createuserbyadmin = async (req, res, next) => {
     const error = new HttpError("Could not create user,try again later", 500);
     return next(error);
   }
-  let newuser;
-  newuser=await User({
+  let newuser
+  newuser=await new User({
     name,
     email,
     password:hashedpassword
   })
+  await newuser.save()
   return res.status(201).json({message:'User created successfully!!'})
 
 }
