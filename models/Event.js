@@ -1,0 +1,39 @@
+const mongoose=require('mongoose')
+const EventSchema=new mongoose.Schema({
+eventname:{
+    type:String,
+    required:true
+},
+eventtype:{
+    type:String,
+    required:true
+},
+starttime:{
+    type:Date,
+    required:true
+},
+endtime:{
+    type:Date,
+    required:true
+},
+eventdescription:{
+    type:String,
+    required:true
+},
+eventparticipitants:[
+{
+type:mongoose.Types.ObjectId(),
+ref:''
+}
+],
+venue:{
+    type:String,
+},
+speakers:{
+    type:String,
+},
+chiefguests:{
+    type:String,
+}
+})
+module.exports=mongoose.model('Event',EventSchema)

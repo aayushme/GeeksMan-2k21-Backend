@@ -31,7 +31,7 @@ const registerforcontest = async (req, res, next) => {
     contest = await Contest.findById(cid);
     user = await User.findById(uid);
     if (user){
-      let registereduser = await RegisteredUser.findOne({ email: user.email,contestname:contest.contestname });
+      let registereduser = await RegisteredUser.findOne({ email: user.email,contestname:contest.contestname,contestid:contest._id });
       if (registereduser) {
         return res.json({
           message: "you are already registered.",
@@ -41,7 +41,7 @@ const registerforcontest = async (req, res, next) => {
     }
   } catch (e) {
     return res
-      .status(404)
+      .status(500)
       .json({ error: "Could not register right now,please try again later" });
   }
   if (!contest) {
@@ -80,6 +80,7 @@ const registerforcontest = async (req, res, next) => {
         givenslot = i + 1;
         contest.availableslot[i] = contest.availableslot[i] + 1;
         newuser.slot.slotno = givenslot;
+        newuser.contestid=contest._id
         newuser.slot.slotstarttime = contest.totalslots[i].slotstarttime;
         newuser.slot.slotendtime = contest.totalslots[i].slotendtime;
         newuser.contestname = contest.contestname;
@@ -92,7 +93,6 @@ const registerforcontest = async (req, res, next) => {
         break;
       }
     }
-    
   } catch (e) {
     return res.status(500).json({message: e });
   }
@@ -112,7 +112,7 @@ const registerforcontest = async (req, res, next) => {
         <p>You registered with this email: ${user.email}.<p>
         Your designated slot is ${givenslot}
         Date and time of slot:-${
-          contest.totalslots[givenslot - 1].timeanddateofslot
+          contest.totalslots[givenslot - 1].slotstarttime+'&nbsp;&nbsp;'+contest.totalslots[givenslot-1].slotendtime
         }
         <p>You can simply take the test by clicking at this link at you designated time slot.<a href="https://geeksmanjcbust.in/contests/${
           contest.contestname
@@ -130,10 +130,13 @@ const registerforcontest = async (req, res, next) => {
       }
       console.log(body);
     });
-  }
-  return res
+    return res
     .status(200)
     .json({ message: "You have been registered,please check your email" });
+  }else{
+    return res.status(410).json({message:'Slots are full'})
+  }
+  
 };
 const updatedetails = async (req, res, next) => {
   try {

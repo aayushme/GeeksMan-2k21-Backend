@@ -1,0 +1,29 @@
+const mongoose=require('mongoose')
+const registerSchema=new mongoose.Schema({
+            name:{
+                type:String,
+            },
+            email:{
+                type:String,
+            },
+            phoneno:{
+                type:Number,
+            },
+            branch:{
+                type:String
+            },
+            college:{
+                type:String
+            },
+            year:{
+                type:String
+            },
+            eventname:{
+                type:String,
+                default:null
+            },
+            eventattended:{
+                type:Boolean,
+            }
+})
+module.exports=mongoose.model("RegisteredParticipant",registerSchema);

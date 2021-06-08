@@ -14,8 +14,6 @@ const AdminSchema=new mongoose.Schema({
      type:String,
      required:true,
    },
-
-
 })
 AdminSchema.plugin(mongooseValidator)
 module.exports=mongoose.model('Admin',AdminSchema)

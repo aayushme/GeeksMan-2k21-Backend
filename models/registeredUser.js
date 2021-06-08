@@ -21,10 +21,6 @@ const registerSchema=new mongoose.Schema({
             year:{
                 type:String
             },
-            branch:{
-                type:String,
-                default:null
-            },
             slot:{
                 slotno:{
                     type:Number
@@ -39,6 +35,9 @@ const registerSchema=new mongoose.Schema({
             marks:{
                 type:Number,
                 default:0
+            },
+            contestid:{
+                type:mongoose.Types.ObjectId
             },
             contestname:{
                 type:String,

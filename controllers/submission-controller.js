@@ -1,5 +1,6 @@
 const Question = require("../models/Question");
 const User=require('../models/User')
+const Contest=require('../models/Contest')
 const jwt=require('jsonwebtoken')
 const submissionhandler = async (req, res, next) => {
   const { answer } = req.body;
@@ -11,7 +12,7 @@ const submissionhandler = async (req, res, next) => {
         .status(404)
         .json({ message: "Test time is over, you are late" });
     }
-    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
+    const decodedToken = jwt.verify(token, process.env.JWTCONTEST_KEY);
     if (!decodedToken) {
       return res
         .status(404)
@@ -24,13 +25,14 @@ const submissionhandler = async (req, res, next) => {
     if(!contestuser||contestuser.usercontestdetail.length===0){
         return res.status(404).json({message:'Could not find you as a registered candidate'})
     }
-    const user=contestuser.usercontestdetail.find((user)=>user.ContestId===contestid)
+    const user=contestuser.usercontestdetail.find((user)=>user.contestid===contestid)
     if(!user){
         return res.status(404).json({message:'Could not find you as a registered candidate'})
     }
-    const questions = await Question.find({ contestid });
-    answer.forEach((element) => {
-      let question = questions.find(
+    const contestquestions = await Contest.findById(contestid).populate('questions')
+
+    answer.forEach((element) =>{
+      let question = contestquestions.questions.find(
         (question) => question._id == element.Question_Id
       );
       if (element.optionchosen == question.correctvalue) {
@@ -40,10 +42,10 @@ const submissionhandler = async (req, res, next) => {
     user.marks = totalScore;
     user.testgiven=true
     await user.save();
-    return res.status(200).json({ Status: "Quiz Submitted Successfully" });
+    return res.status(200).json({ message: "Test Submitted Successfully" });
   } catch (error) {
     console.log(error)
-    return res.status(400).json({ error: error });
+    return res.status(500).json({ message: error });
   }
 };
 module.exports = {

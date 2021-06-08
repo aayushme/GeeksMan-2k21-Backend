@@ -5,7 +5,7 @@ const userOne={
     _id:useroneId,
     name:"testuser1",
     email:"testuser1@example.com",
-    password:"hellotest1"
+    password:"hellotest1@56"
 }
 const setupdatabase=async ()=>{
     await User.deleteMany()

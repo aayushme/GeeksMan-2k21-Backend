@@ -9,10 +9,11 @@ const getshuffledpertest=async (req,res,next)=>{
     let noofquestions;
     const token = req.headers.authorization.split(" ")[1]; //authorization 'Bearer token'
     if (!token) {
-      return res.status(404).json({message:'Could not start your test!!'})
+      return res.status(403).json({message:'Could not start your test!!'})
     }
-    const decodedToken = jwt.verify(token,process.env.JWT_KEY);
+    const decodedToken = jwt.verify(token,process.env.JWTCONTEST_KEY);
     const contestId=decodedToken.contestId
+    const slotno=decodedToken.slotno
     let contest;
     try{
         contest=await Contest.findById(contestId)
@@ -20,29 +21,26 @@ const getshuffledpertest=async (req,res,next)=>{
         return res.json({message:'Could not find the contest!!'})
     }
     if(contest){
-      noofquestions=contest.questions
+      noofquestions=contest.noofquestions
     }else{
         return res.json({message:'Contest does not exists'})
     }
     try{
-        const questions=await Question.find({contestid:contestId},'-correctvalue');
+        const questions=contest.questions
+        questions.forEach(question=>{
+            delete question.correctvalue
+        })
         shuffle(questions);        
         function shuffle(array) {
-         for (let i = array.length - 1; i > 0; i--) {
-             const j = Math.floor(Math.random() * (i + 1));
-             [array[i], array[j]] = [array[j], array[i]];
+         for(let i=(slotno-1)*noofquestions;i<(slotno-1)*noofquestions+noofquestions&&i<array.length;i++){
+                 testquestions.push(array[i])
          }
-         //console.log("------------------------------------------------------------------------")
-         for(let i=0;i<noofquestions;i++)
-        {
-            testquestions.push(array[i]); 
-        }
         return res.status(200).json(testquestions);
      }
      }
      catch(error)
      {  //console.log(error);
-         return res.status(500).json({"error":error})
+         return res.status(500).json({message:error})
      }
      }
 const getallquestions=async (req,res,next)=>{
@@ -76,7 +74,7 @@ const createquestion=async (req,res,next)=>{
     try{
        contest=await Contest.findById(contestid)
     }catch(e){
-        return res.status(404).json({message:e})
+        return res.status(500).json({message:e})
     }
     if(!contest){
         return res.status(404).json({message:'There is no contest present'})
