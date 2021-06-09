@@ -91,9 +91,6 @@ await Contest.deleteMany({_id:{$in:contestids}})
 }catch(err){
 return next(new HttpError('Could not delete the contest,please try again later',500))
 }
-if(!contest){
-    return next(new HttpError('Could not find a contest with that id',404))
-}
 res.json({message:'Deleted successfully'})
 }
 
