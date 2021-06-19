@@ -4,13 +4,17 @@ contestname:{
     type:String,
     required:true
 },
+registration_starttime:{
+type:Number,
+},
+registration_endtime:{
+type:Number,
+},
 starttime:{
-    type:Date,
-    required:true
+    type:Number,
 },
 endtime:{
-    type:Date,
-    required:true
+    type:Number,
 },
 image:{
     type:String,
@@ -73,8 +77,16 @@ rules:{
 },
 contesttype:{
     type:String,
-    enum:['ongoing','upcoming','previous'],
     required:true
+},
+seats_filled:{
+type:Number,
+},
+seats_left:{
+type:Number,
+},
+venue:{
+    type:String
 }
 })
 module.exports=mongoose.model('Contest',contestSchema)

@@ -1,6 +1,7 @@
 const Contest = require('../models/Contest')
 const HttpError=require('../models/Http-error')
 const {cloudinary}=require('../Cloudinaryconfig/Cloudinary')
+const crypto=require('crypto')
 const createcontest=async (req,res,next)=>{
 const {contestname,image,starttime,endtime,prize,contestdetail,noofquestions,contestduration,totalslots,slotstrength,rules,contesttype}=req.body
 let imageresponse
@@ -53,7 +54,6 @@ await contest.save()
 res.status(200).json({contest:contest.toObject({getters:true})})
 }
 
-
 const getcontest=async (req,res,next)=>{
 const contestid=req.params.cid
 let contest;
@@ -63,11 +63,9 @@ contest=await Contest.findById(contestid,['-questions'])
     const error=new HttpError('Could not fetch the contest,please try again later',500)
     return next(error)
 }
-
 if(!contest){
     return next(new HttpError("Could not find a contest with that id,please try again later",422))
 }
-
 res.status(200).json({contest:contest.toObject({getters:true})})
 }
 
