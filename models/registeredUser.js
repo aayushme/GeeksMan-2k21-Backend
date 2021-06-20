@@ -36,6 +36,9 @@ const registerSchema=new mongoose.Schema({
                 type:Number,
                 default:0
             },
+            mainuserid:{
+              type:mongoose.Types.ObjectId
+            },
             contestid:{
                 type:mongoose.Types.ObjectId
             },

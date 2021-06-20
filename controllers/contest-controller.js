@@ -10,11 +10,19 @@ try{
 }catch(e){
     return res.status(500).json({message:'Image upload failed!!'})
 }
+const registrationstarttime=Date.now()
+const registrationendtime=new Date(starttime)
+const conteststarttime=new Date(starttime)
+const contestendtime=new Date(endtime)
+const remainingseats=slotstrength*totalslots.length
+console.log(registrationstarttime)
 let contest=new Contest({
  contestname,
  image:imageresponse.secure_url,
- starttime,
- endtime,
+ registration_starttime:registrationstarttime,
+ registration_endtime:registrationendtime,
+ starttime:conteststarttime,
+ endtime:contestendtime,
  prize,
  contestdetail,
  noofquestions,
@@ -22,7 +30,8 @@ let contest=new Contest({
  totalslots,
  slotstrength,
  rules,
- contesttype
+ contesttype,
+ seats_left:remainingseats
 })
 try{
 await contest.save()
@@ -30,7 +39,6 @@ await contest.save()
 const error=new HttpError('Could not create a contest please try again later',500)
 return next(error)
 }
-
 res.status(201).json({message:"Contest created successfully!!"})
 }
 
@@ -91,7 +99,6 @@ return next(new HttpError('Could not delete the contest,please try again later',
 }
 res.json({message:'Deleted successfully'})
 }
-
 module.exports={
     createcontest,
     updatecontest,

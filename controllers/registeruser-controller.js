@@ -42,24 +42,29 @@ const registerforcontest = async (req, res, next) => {
   } catch (e) {
     return res
       .status(500)
-      .json({ error: "Could not register right now,please try again later" });
+      .json({ message: "Could not register right now,please try again later" });
   }
   if (!contest) {
     return res
       .status(404)
       .json({
-        error:
+        message:
           "Could not find the contest that you are trying to register for,please try again later",
       });
   }
   if (!user) {
     return res
       .status(404)
-      .json({ error: "Could not find the user,please try again later" });
+      .json({ message: "Could not find the user,please try again later" });
+  }
+  if(contest.seats_filled==contest.seats_left){
+    return res.json({message:'All seats are boooked cannot register you'})
   }
   let newuser = new RegisteredUser({
     name: user.name,
     email: user.email,
+    mainuserid:uid,
+    contestid:cid,
     phoneno: user.phoneno,
     college: user.college,
     year: user.year,
@@ -67,7 +72,6 @@ const registerforcontest = async (req, res, next) => {
   });
   let totalslots = contest.totalslots.length;
   let givenslot;
-
   if (contest.availableslot.length === 0) {
     let slotarray = new Array(totalslots).fill(0);
     contest.availableslot = slotarray;
@@ -80,11 +84,12 @@ const registerforcontest = async (req, res, next) => {
         givenslot = i + 1;
         contest.availableslot[i] = contest.availableslot[i] + 1;
         newuser.slot.slotno = givenslot;
-        newuser.contestid=contest._id
         newuser.slot.slotstarttime = contest.totalslots[i].slotstarttime;
         newuser.slot.slotendtime = contest.totalslots[i].slotendtime;
         newuser.contestname = contest.contestname;
         await newuser.save({ session: sess });
+        contest.seats_filled=contest.seats_filled+1
+        contest.seats_left=contest.seats_left-1
         contest.registeredusers.push(newuser);
         user.usercontestdetail.push(newuser);
         await contest.save({ session: sess });
@@ -134,7 +139,7 @@ const registerforcontest = async (req, res, next) => {
     .status(200)
     .json({ message: "You have been registered,please check your email" });
   }else{
-    return res.status(410).json({message:'Slots are full'})
+    return res.json({message:'Slots are full'})
   }
   
 };

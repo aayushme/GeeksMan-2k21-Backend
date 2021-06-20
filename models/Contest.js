@@ -6,15 +6,19 @@ contestname:{
 },
 registration_starttime:{
 type:Number,
+required:true
 },
 registration_endtime:{
 type:Number,
+required:true
 },
 starttime:{
     type:Number,
+    required:true
 },
 endtime:{
     type:Number,
+    required:true
 },
 image:{
     type:String,
@@ -76,11 +80,12 @@ rules:{
     required:true
 },
 contesttype:{
-    type:String,
-    required:true
+type:String,
+required:true
 },
 seats_filled:{
 type:Number,
+default:0
 },
 seats_left:{
 type:Number,
