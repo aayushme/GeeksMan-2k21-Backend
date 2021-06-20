@@ -3,7 +3,7 @@ const HttpError=require('../models/Http-error')
 const {cloudinary}=require('../Cloudinaryconfig/Cloudinary')
 const crypto=require('crypto')
 const createcontest=async (req,res,next)=>{
-const {contestname,image,starttime,endtime,prize,contestdetail,noofquestions,contestduration,totalslots,slotstrength,rules,contesttype}=req.body
+const {contestname,image,starttime,endtime,prize,contestdetail,venue,noofquestions,contestduration,totalslots,slotstrength,rules,contesttype}=req.body
 let imageresponse
 try{
     imageresponse=await cloudinary.uploader.upload(image,{upload_preset:'Contest-image'})
@@ -27,6 +27,7 @@ let contest=new Contest({
  totalslots,
  slotstrength,
  rules,
+ venue,
  contesttype,
  seats_left:remainingseats
 })

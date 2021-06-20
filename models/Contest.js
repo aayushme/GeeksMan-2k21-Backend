@@ -17,7 +17,7 @@ starttime:{
     required:true
 },
 endtime:{
-    type:Date,
+    type:Number,
     required:true
 },
 image:{
@@ -70,6 +70,10 @@ slotstrength:{
 },
 availableslot:{
 type:Array,
+},
+fees:{
+    type:Number,
+    required:true
 },
 contestdetail:{
     type:String,
