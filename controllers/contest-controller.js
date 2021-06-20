@@ -11,18 +11,15 @@ try{
     return res.status(500).json({message:'Image upload failed!!'})
 }
 const registrationstarttime=Date.now()
-const registrationendtime=new Date(starttime)
-const conteststarttime=new Date(starttime)
-const contestendtime=new Date(endtime)
 const remainingseats=slotstrength*totalslots.length
 console.log(registrationstarttime)
 let contest=new Contest({
  contestname,
  image:imageresponse.secure_url,
  registration_starttime:registrationstarttime,
- registration_endtime:registrationendtime,
- starttime:conteststarttime,
- endtime:contestendtime,
+ registration_endtime:starttime,
+ starttime:starttime,
+ endtime:endtime,
  prize,
  contestdetail,
  noofquestions,

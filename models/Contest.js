@@ -5,19 +5,19 @@ contestname:{
     required:true
 },
 registration_starttime:{
-type:Number,
+type:Date,
 required:true
 },
 registration_endtime:{
-type:Number,
+type:Date,
 required:true
 },
 starttime:{
-    type:Number,
+    type:Date,
     required:true
 },
 endtime:{
-    type:Number,
+    type:Date,
     required:true
 },
 image:{
