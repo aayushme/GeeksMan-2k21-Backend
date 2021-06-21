@@ -147,7 +147,6 @@ const updatedetails = async (req, res, next) => {
   try {
     const _id = req.params.id;
     const { Name, email, PhoneNo, branch, College, year } = req.body;
-
     let registereduser = await RegisteredUser.findOne({ _id });
     if (registereduser) {
       registereduser.Name = Name;

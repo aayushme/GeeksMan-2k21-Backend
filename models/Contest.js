@@ -46,8 +46,7 @@ prize:{
 registeredusers:[
     {
         type:mongoose.Types.ObjectId,
-        ref:"RegisteredUser",
-        default:null
+        ref:'RegisteredUser'
     }
 ],
 totalslots:[{
@@ -97,6 +96,10 @@ type:Number,
 },
 venue:{
     type:String
+},
+isregistered:{
+    type:Boolean,
+    default:false
 }
 })
 module.exports=mongoose.model('Contest',contestSchema)

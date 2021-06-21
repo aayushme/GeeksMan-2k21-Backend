@@ -2,8 +2,7 @@ const { validationResult } = require('express-validator')
 const User = require('../models/User.js')
 const api_key = process.env.EMAIL_KEY;
 const domain = 'geeksmanjcbust.in';
-const mailgun = require('mailgun-js')
-const mg=mailgun({ apiKey: api_key, domain: domain });
+var mailgun = require('mailgun-js')({ apiKey: api_key, domain: domain });
 const HttpError = require('../models/Http-error')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -57,7 +56,7 @@ const signuphandler = async (req, res, next) => {
     <p>Click below to confirm your email address:
     <a href="${process.env.BACKEND_URL}activate/user/${hash}">link</a><br>If you have problems, please paste the above URL into your web browser.</p>`
     };
-    mg.messages().send(data, function (error, body) {
+    mailgun.messages().send(data, function (error, body) {
       if (error) {
         console.log(error);
       }
@@ -109,7 +108,7 @@ const loginhandler = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userdId: existingUser.id, email: existingUser.email },
+      { userId: existingUser._id, email: existingUser.email },
       process.env.JWT_KEY,
       { expiresIn: "22h" }
     );
@@ -202,9 +201,6 @@ const forgotpass = async (req, res, next) => {
     const { email } = req.body
     const thisuser = await User.findOne({ email });
     if (thisuser) {
-      var api_key = process.env.EMAIL_KEY;
-      var domain = 'geeksmanjcbust.in';
-      var mailgun = require('mailgun-js')({ apiKey: api_key, domain: domain });
       let hash = thisuser._id
       var data = {
         from: '<cedept@geeksmanjcbust.in>',
@@ -266,7 +262,6 @@ const getUserContest = async (req, res, next) => {
   }
   return res.status(200).json({ data: userwithcontests.usercontestdetail })
 }
-
 const createuserbyadmin = async (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
