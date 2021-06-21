@@ -9,7 +9,7 @@ module.exports =(req, res, next) => {
     if(req.headers.authorization)
     token = req.headers.authorization.split(" ")[1]; //authorization 'Bearer token'
     if (!token){
-       next()
+      return next()
     }
     let decodedtoken
     try{
