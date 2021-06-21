@@ -17,7 +17,7 @@ starttime:{
     required:true
 },
 endtime:{
-    type:Number,
+    type:Date,
     required:true
 },
 image:{
@@ -73,7 +73,8 @@ type:Array,
 },
 fees:{
     type:Number,
-    required:true
+    required:true,
+    default:0
 },
 contestdetail:{
     type:String,
