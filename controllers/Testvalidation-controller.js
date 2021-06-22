@@ -2,8 +2,18 @@ const Contest=require('../models/Contest')
 const jwt=require('jsonwebtoken')
 const User=require('../models/User')
 const testvalidation=async (req,res,next)=>{
-let time,contest,token;
-const {cid,uid}=req.body
+let time,contest,Token;
+const {cid,token}=req.body
+let decodedToken;
+try{
+    decodedToken=jwt.verify(token,process.env.JWT_KEY)
+}catch{
+    return res.status(403).json({message:'Cannot start your test,validation failed'})
+}
+let uid
+if(decodedToken){    
+uid=decodedToken.userId
+}
 let registeruserid,slotno
 const user=await User.findById(uid).populate('usercontestdetail')
 if(user||user.usercontestdetail.length!=0){
@@ -21,11 +31,11 @@ return res.status(404).json({error:e})
 }
 time=contest.contestduration
 try{
-token=jwt.sign({contestId:cid,userId:uid,ruid:registeruserid,slotno:slotno},process.env.JWTCONTEST_KEY,{expiresIn:`${time}`})
+Token=jwt.sign({contestId:cid,userId:uid,ruid:registeruserid,slotno:slotno},process.env.JWTCONTEST_KEY,{expiresIn:`${time}`})
 }catch(e){
     return res.status(500).json({message:'Could not start your test please try again later'})
 }
-res.status(201).json({token})
+res.status(201).json({Token})
 }
 module.exports={
     testvalidation

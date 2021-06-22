@@ -71,7 +71,6 @@ contest=await Contest.findById(contestid,['-questions']).populate('registereduse
 if(!contest){
     return next(new HttpError("Could not find a contest with that id,please try again later",422))
 }
-console.log(contest.registeredusers)
 if(req.userid){
 let idx=contest.registeredusers.findIndex(ruser=>ruser.mainuserid==req.userid)
 if(idx!=-1){
@@ -99,7 +98,6 @@ if(req.userid){
     contestregister.forEach((contest,index)=>{
         let idx=contest.registeredusers.findIndex(ruser=>ruser.mainuserid==req.userid)
         if(idx!=-1){
-            console.log('found one')
             contests[index].isregistered=true
         }
     })

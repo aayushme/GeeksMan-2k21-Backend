@@ -18,7 +18,6 @@ module.exports =(req, res, next) => {
       return next()
     }
     if(decodedtoken){
-      console.log('it worked')
     req.userid =decodedtoken.userId ;
     }
      next()
