@@ -31,7 +31,7 @@ return res.status(404).json({error:e})
 }
 time=contest.contestduration
 try{
-Token=jwt.sign({contestId:cid,userId:uid,ruid:registeruserid,slotno:slotno},process.env.JWTCONTEST_KEY,{expiresIn:`${time}`})
+Token=jwt.sign({contestId:cid,userId:uid,ruid:registeruserid,slotno:slotno},process.env.JWTCONTEST_KEY,{expiresIn:`${time}h`})
 }catch(e){
     return res.status(500).json({message:'Could not start your test please try again later'})
 }

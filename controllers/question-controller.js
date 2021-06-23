@@ -11,7 +11,12 @@ const getshuffledpertest=async (req,res,next)=>{
     if (!token) {
       return res.status(403).json({message:'Could not start your test!!'})
     }
-    const decodedToken = jwt.verify(token,process.env.JWTCONTEST_KEY);
+    let decodedToken;
+    try{
+     decodedToken = jwt.verify(token,process.env.JWTCONTEST_KEY)
+    }catch{
+        return res.status(403).json({message:'Validation failed,cannot start your test'})
+    }
     const contestId=decodedToken.contestId
     const slotno=decodedToken.slotno
     let contest;
@@ -26,11 +31,11 @@ const getshuffledpertest=async (req,res,next)=>{
         return res.json({message:'Contest does not exists'})
     }
     try{
-        const questions=contest.questions
-        questions.forEach(question=>{
+        const questions=await Contest.findById(contestId).populate('questions')
+        questions.questions.forEach(question=>{
             delete question.correctvalue
         })
-        shuffle(questions);        
+        shuffle(questions.questions);        
         function shuffle(array) {
          for(let i=(slotno-1)*noofquestions;i<(slotno-1)*noofquestions+noofquestions&&i<array.length;i++){
                  testquestions.push(array[i])
