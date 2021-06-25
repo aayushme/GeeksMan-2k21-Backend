@@ -20,9 +20,9 @@ if(user||user.usercontestdetail.length!=0){
     const finduser=user.usercontestdetail.find(user=>user.contestid==cid)
     registeruserid=finduser._id
     slotno=finduser.slot.slotno
-    if(finduser.testgiven){
-        return res.json({message:'You have already given the test'});
-    }
+    // if(finduser.testgiven){
+    //     return res.json({message:'You have already given the test'});
+    // }
 }
 try{
 contest=await Contest.findById(cid)
