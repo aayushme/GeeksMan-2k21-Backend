@@ -70,7 +70,7 @@ contest=await Contest.findById(contestid,['-questions']).populate('registereduse
     return next(error)
 }
 if(!contest){
-    return next(new HttpError("Could not find a contest with that id,please try again later",200))
+    return res.status(200).json({contest:null})
 }
 if(req.userid){
 let idx=contest.registeredusers.findIndex(ruser=>ruser.mainuserid==req.userid)
@@ -110,7 +110,7 @@ if(req.userid){
     })
 }
 if(contests.length===0){
-    return next(new HttpError("There are no contests currently available",200))
+    return res.status(200).json({contests:[]})
 }
 res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:true}))})
 }
