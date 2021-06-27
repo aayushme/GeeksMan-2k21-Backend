@@ -100,6 +100,18 @@ venue:{
 isregistered:{
     type:Boolean,
     default:false
+},
+teststarttime:{
+    type:Date,
+    default:null
+},
+testendtime:{
+    type:Date,
+    default:null
+},
+testgiven:{
+    type:Boolean,
+    default:false
 }
 })
 module.exports=mongoose.model('Contest',contestSchema)

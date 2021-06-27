@@ -1,6 +1,7 @@
 const Contest = require('../models/Contest')
 const HttpError=require('../models/Http-error')
 const {cloudinary}=require('../Cloudinaryconfig/Cloudinary')
+const User = require('../models/User')
 const createcontest=async (req,res,next)=>{
 const {contestname,image,starttime,endtime,prize,contestdetail,venue,noofquestions,contestduration,totalslots,slotstrength,rules,contesttype}=req.body
 let imageresponse
@@ -69,12 +70,15 @@ contest=await Contest.findById(contestid,['-questions']).populate('registereduse
     return next(error)
 }
 if(!contest){
-    return next(new HttpError("Could not find a contest with that id,please try again later",422))
+    return next(new HttpError("Could not find a contest with that id,please try again later",200))
 }
 if(req.userid){
 let idx=contest.registeredusers.findIndex(ruser=>ruser.mainuserid==req.userid)
 if(idx!=-1){
     contest.isregistered=true
+    contest.teststarttime=contest.registeredusers[idx].slot.slotstarttime
+    contest.testendtime=contest.registeredusers[idx].slot.slotendtime
+    contest.testgiven=contest.registeredusers[idx].testgiven
 }
 }
 
@@ -99,11 +103,14 @@ if(req.userid){
         let idx=contest.registeredusers.findIndex(ruser=>ruser.mainuserid==req.userid)
         if(idx!=-1){
             contests[index].isregistered=true
+            contests[index].teststarttime=contest.registeredusers[idx].slot.slotstarttime
+            contests[index].testendtime=contest.registeredusers[idx].slot.slotendtime
+            contests[index].testgiven=contest.registeredusers[idx].testgiven
         }
     })
 }
 if(contests.length===0){
-    return next(new HttpError("There are no contests currently available",404))
+    return next(new HttpError("There are no contests currently available",200))
 }
 res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:true}))})
 }
