@@ -57,6 +57,11 @@ const registerforcontest = async (req, res, next) => {
       .status(404)
       .json({ message: "Could not find the user,please try again later" });
   }
+  let starttime=new Date(contest.starttime).getTime()
+  
+  //  if(Date.now()>starttime){
+  //    return res.status({message:'Registration time is already over!'})
+  //  }
   if(contest.seats_filled==contest.seats_left){
     return res.json({message:'All seats are boooked cannot register you'})
   }

@@ -38,9 +38,9 @@ if(user||user.usercontestdetail.length!=0){
     slotno=finduser.slot.slotno
     starttime=new Date(finduser.slot.slotstarttime).getTime()
     endtime=new Date(finduser.slot.slotendtime).getTime()
-    if(finduser.testgiven){
-        return res.status(403).json({message:'You have already given the test'});
-    }
+    // if(finduser.testgiven){
+    //     return res.status(403).json({message:'You have already given the test'});
+    // }
 }else{
     return res.status(403).json({message:'You are not registered for this contest'})
 }
