@@ -38,9 +38,9 @@ if(user||user.usercontestdetail.length!=0){
     slotno=finduser.slot.slotno
     starttime=new Date(finduser.slot.slotstarttime).getTime()
     endtime=new Date(finduser.slot.slotendtime).getTime()
-    // if(finduser.testgiven){
-    //     return res.status(403).json({message:'You have already given the test'});
-    // }
+    if(finduser.testgiven){
+        return res.status(403).json({message:'You have already given the test'});
+    }
 }else{
     return res.status(403).json({message:'You are not registered for this contest'})
 }
@@ -53,7 +53,7 @@ if(endtime<=Date.now()){
     return res.status(403).json({message:'Either contest or your slot has already ended'})
 }
 
-time=parseInt(contest.contestduration)*60*60*1000
+time=parseInt(contest.contestduration)
 let tokentime
 if((Date.now()+time)>=endtime){
     tokentime=time-((Date.now()+time)-endtime)

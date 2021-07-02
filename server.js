@@ -1,5 +1,6 @@
 const app = require("./app");
 const mongoose = require("mongoose");
+const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
 const port = process.env.PORT || 5000;
 require('dotenv').config()
 mongoose
@@ -15,3 +16,12 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+const db=mongoose.connection
+db.once('open',()=>{
+  console.log('Database connected')
+  const admincollection=db.collection('admins')
+  const changestream=admincollection.watch()
+  changestream.on('change',(change)=>{
+    Chatqueuecontroller.createadminwithid(change.fullDocument)
+  })
+})

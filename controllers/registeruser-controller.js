@@ -59,9 +59,9 @@ const registerforcontest = async (req, res, next) => {
   }
   let starttime=new Date(contest.starttime).getTime()
   
-  //  if(Date.now()>starttime){
-  //    return res.status({message:'Registration time is already over!'})
-  //  }
+   if(Date.now()>starttime){
+     return res.status({message:'Registration time is already over!'})
+   }
   if(contest.seats_filled==contest.seats_left){
     return res.json({message:'All seats are boooked cannot register you'})
   }
