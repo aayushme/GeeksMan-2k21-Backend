@@ -8,6 +8,16 @@ let Admin=await Chatqueue.findOne({adminid:admin.adminid})
 Admin.roomids=admin.roomids
 await Admin.save()
 }
+const getrooms=async (req,res)=>{
+    const id=req.params.id
+    let admin;
+    try{
+    admin=await Chatqueue.findOne({adminid:id})
+    }catch(err){
+        return res.status(500).json({message:'something went wrong'})
+    }
+    return res.status(200).json({roomids:admin.roomids})
+}
 const createadminwithid=async (admin)=>{
     const Admin=new Chatqueue({
         adminname:admin.adminname,
@@ -20,5 +30,6 @@ const createadminwithid=async (admin)=>{
 module.exports={
     getadminswithroomids,
     saveadmin,
-    createadminwithid
+    createadminwithid,
+    getrooms
 }

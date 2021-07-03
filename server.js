@@ -22,6 +22,8 @@ db.once('open',()=>{
   const admincollection=db.collection('admins')
   const changestream=admincollection.watch()
   changestream.on('change',(change)=>{
+    console.log(change)
+    if(change.operationType==='insert')
     Chatqueuecontroller.createadminwithid(change.fullDocument)
   })
 })

@@ -13,6 +13,7 @@ const Pendinguserrouter=require('./routers/Pendinguser')
 const uploadfilerouter=require('./routers/CsvUpload')
 const memberrouter=require('./routers/Member')
 const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
+const chatqueuerouter=require('./routers/Chatqueue')
 const mongoose=require('mongoose')
 const cors=require('cors')
 require('dotenv').config()
@@ -33,6 +34,7 @@ app.enable("trust proxy")
 // app.get("/",(req,res)=>{
 //   res.render('upload')
 // })
+app.use(chatqueuerouter)
 app.use(uploadfilerouter)
 app.use(memberrouter)
 app.use(Pendinguserrouter)
@@ -53,7 +55,7 @@ const io = require("socket.io")(server, {
 io.of("/firstconnection").on("connection", (socket) => {
     socket.on("join-room", (roomid)=>{
        socket.join(roomid)
-       const caladmin=async ()=>{
+       const assignadmin=async ()=>{
         const admins=await Chatqueuecontroller.getadminswithroomids()
         let admin=admins[0]
         console.log(admins)
@@ -61,14 +63,14 @@ io.of("/firstconnection").on("connection", (socket) => {
             if(admin.roomids.length>element.roomids.length||(admin.roomids.length==element.roomids.length&&admin.queriesresolved>element.queriesresolved)){
               admin=element
             }
-          
         });
         admin.roomids.push(roomid)
         await Chatqueuecontroller.saveadmin(admin)
         console.log(admin)
         socket.emit('joined','successfull')
        }
-       caladmin()
+       assignadmin()
+
     })
 });
 
