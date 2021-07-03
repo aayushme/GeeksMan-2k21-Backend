@@ -49,35 +49,49 @@ app.use(adminrouter)
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin:["http://localhost:3000","http://localhost:3001"],
     methods: ["GET", "POST"]
   }});
-io.of("/firstconnection").on("connection", (socket) => {
-    socket.on("join-room", (roomid)=>{
-       socket.join(roomid)
-       const assignadmin=async ()=>{
-        const admins=await Chatqueuecontroller.getadminswithroomids()
-        let admin=admins[0]
-        console.log(admins)
-        admins.forEach(element => {
-            if(admin.roomids.length>element.roomids.length||(admin.roomids.length==element.roomids.length&&admin.queriesresolved>element.queriesresolved)){
-              admin=element
-            }
-        });
-        admin.roomids.push(roomid)
-        await Chatqueuecontroller.saveadmin(admin)
-        console.log(admin)
-        socket.emit('joined','successfull')
-       }
-       assignadmin()
+// io.of("/firstconnection").on("connection", (socket) => {
+   
+// });
+// io.of('/connectingadmin').on("connection",(socket)=>{
 
-    })
-});
-
-io.of('/reconnecting').on("connection",(socket)=>{
-  socket.on("join-room",(roomid)=>{
+// })
+io.of('/connection').on("connection",(socket)=>{
+  socket.on("join-room-user-firsttime", (roomid)=>{
+    socket.join(roomid)
+    const assignadmin=async ()=>{
+     const admins=await Chatqueuecontroller.getadminswithroomids()
+     let admin=admins[0]
+     console.log(admins)
+     admins.forEach(element => {
+         if(admin.roomids.length>element.roomids.length||(admin.roomids.length==element.roomids.length&&admin.queriesresolved>element.queriesresolved)){
+           admin=element
+         }
+     });
+     admin.roomids.push(roomid)
+     await Chatqueuecontroller.saveadmin(admin)
+     console.log(admin)
+     socket.emit('joined','successfull')
+    }
+    assignadmin()
+ })
+  socket.on("join-room-user",(roomid)=>{
     console.log('room joined again',roomid)
      socket.join(roomid)
+  })
+  socket.on('join-room-admin',(roomid)=>{
+    socket.join(roomid)
+    console.log('admin joined',roomid)
+  })
+  socket.on("message-user",(msg,roomid,userid)=>{
+    console.log(msg,roomid,userid)
+    socket.broadcast.to(roomid).emit('message',msg,userid)
+  })
+  socket.on("message-admin",(msg,roomid,adminid)=>{
+    console.log(msg,roomid,adminid)
+    socket.broadcast.to(roomid).emit('message-to-user',msg,adminid)
   })
 })
 
