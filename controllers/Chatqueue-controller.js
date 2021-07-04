@@ -16,6 +16,9 @@ const getrooms=async (req,res)=>{
     }catch(err){
         return res.status(500).json({message:'something went wrong'})
     }
+    if(!admin){
+        return res.status(200).json({roomids:[]})
+    }
     return res.status(200).json({roomids:admin.roomids})
 }
 const createadminwithid=async (admin)=>{

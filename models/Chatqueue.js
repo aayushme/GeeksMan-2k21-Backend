@@ -12,8 +12,13 @@ queriesresolved:{
 },
 roomids:[
     {
+    id:{
     type:String
-    } 
+    },
+    username:{
+        type:String
+    }
+} 
 ]
 })
 module.exports=mongoose.model('chatqueues',ChatqueueSchema)

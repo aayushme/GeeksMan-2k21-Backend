@@ -14,6 +14,8 @@ const uploadfilerouter=require('./routers/CsvUpload')
 const memberrouter=require('./routers/Member')
 const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
 const chatqueuerouter=require('./routers/Chatqueue')
+const chatscontroller=require('./controllers/Chat-controller')
+const chatsrouter=require('./routers/Chats')
 const mongoose=require('mongoose')
 const cors=require('cors')
 require('dotenv').config()
@@ -34,6 +36,7 @@ app.enable("trust proxy")
 // app.get("/",(req,res)=>{
 //   res.render('upload')
 // })
+app.use(chatsrouter)
 app.use(chatqueuerouter)
 app.use(uploadfilerouter)
 app.use(memberrouter)
@@ -52,14 +55,9 @@ const io = require("socket.io")(server, {
     origin:["http://localhost:3000","http://localhost:3001"],
     methods: ["GET", "POST"]
   }});
-// io.of("/firstconnection").on("connection", (socket) => {
-   
-// });
-// io.of('/connectingadmin').on("connection",(socket)=>{
 
-// })
 io.of('/connection').on("connection",(socket)=>{
-  socket.on("join-room-user-firsttime", (roomid)=>{
+  socket.on("join-room-user-firsttime", (roomid,username)=>{
     socket.join(roomid)
     const assignadmin=async ()=>{
      const admins=await Chatqueuecontroller.getadminswithroomids()
@@ -70,28 +68,31 @@ io.of('/connection').on("connection",(socket)=>{
            admin=element
          }
      });
-     admin.roomids.push(roomid)
+     admin.roomids.push({id:roomid,username})
      await Chatqueuecontroller.saveadmin(admin)
-     console.log(admin)
      socket.emit('joined','successfull')
     }
     assignadmin()
  })
   socket.on("join-room-user",(roomid)=>{
-    console.log('room joined again',roomid)
      socket.join(roomid)
   })
   socket.on('join-room-admin',(roomid)=>{
     socket.join(roomid)
-    console.log('admin joined',roomid)
   })
-  socket.on("message-user",(msg,roomid,userid)=>{
-    console.log(msg,roomid,userid)
-    socket.broadcast.to(roomid).emit('message',msg,userid)
+  socket.on("message-user",(msg,roomid,userid,timestamp)=>{
+    const savemsg=async ()=>{
+        await chatscontroller.savemessages({roomid,msg,ownerid:userid,timestamp})
+    }
+    savemsg()
+    socket.broadcast.to(roomid).emit('message',msg,userid,timestamp)
   })
-  socket.on("message-admin",(msg,roomid,adminid)=>{
-    console.log(msg,roomid,adminid)
-    socket.broadcast.to(roomid).emit('message-to-user',msg,adminid)
+  socket.on("message-admin",(msg,roomid,adminid,timestamp,adminname)=>{
+    const savemsg=async ()=>{
+    await chatscontroller.savemessages({roomid,msg,ownerid:adminid,timestamp,adminname})
+    }
+    savemsg()
+    socket.broadcast.to(roomid).emit('message-to-user',msg,adminid,timestamp)
   })
 })
 
