@@ -31,21 +31,18 @@ const getshuffledpertest=async (req,res,next)=>{
         return res.json({message:'Contest does not exists'})
     }
     try{
-        const questions=await Contest.findById(contestId).populate('questions')
-        questions.questions.forEach(question=>{
-            delete question.correctvalue
-        })
+        const questions=await Contest.findById(contestId).populate('questions','-correctvalue')
         shuffle(questions.questions);        
-        function shuffle(array) {
+        function shuffle(array){
          for(let i=(slotno-1)*noofquestions;i<(slotno-1)*noofquestions+noofquestions&&i<array.length;i++){
                  testquestions.push(array[i])
          }
         return res.status(200).json(testquestions);
      }
      }
-     catch(error)
-     {  //console.log(error);
-         return res.status(500).json({message:error})
+     catch
+     {
+         return res.status(500).json({message:'Internal server error'})
      }
      }
 const getallquestions=async (req,res,next)=>{
@@ -79,13 +76,12 @@ const createquestion=async (req,res,next)=>{
     try{
        contest=await Contest.findById(contestid)
     }catch(e){
-        return res.status(500).json({message:e})
+        return res.status(500).json({message:'Internal server error'})
     }
     if(!contest){
         return res.status(404).json({message:'There is no contest present'})
     }
     const {question,image,options,correctvalue,score}=req.body
-
     let questions 
     if(image!==null){
     //First upload image to cloudinary and get url
@@ -94,7 +90,7 @@ const createquestion=async (req,res,next)=>{
     try{
         imageresponse=await cloudinary.uploader.upload(image,{upload_preset:'Question-images'})
     }catch(e){
-        return res.status(500).json({message:'Image upload failed!!'})
+        return res.status(500).json({message:'Question image upload failed!!'})
     }
     questions=new Question({
         question,
@@ -128,7 +124,7 @@ let questionsbycontestid;
 try{
 questionsbycontestid=await Contest.findById(contestid).populate("questions")
 }catch(e){
-    return res.status(500).json({message:e})
+    return res.status(500).json({message:'Internal server error'})
 }
 if(!questionsbycontestid||questionsbycontestid.questions.length===0){
     return res.status(404).json({message:"There are no questions"})
@@ -171,7 +167,7 @@ const deletequestion=async (req,res,next)=>{
     try {
        await Question.deleteMany({_id:{$in:questionids}})
     } catch (error) {
-        return res.status(500).json({message:"Could not delete the questions,please try again later"})
+        return res.status(500).json({message:"Internal server error"})
     }
     return res.status(200).json({message:"Deleted Successfully!"})
 }

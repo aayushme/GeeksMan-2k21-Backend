@@ -3,11 +3,11 @@ const User=require('../models/User')
 const verificationhandler=async (req,res,next)=>{
     var hash=req.params.hash
     try{
-      const user=await PendingUser.find({_id:hash})
-      const {name,email,password}=user[0]
+      const user=await PendingUser.findOne({_id:hash})
       if(!user){
-        return res.status(422).send('User cannot be activated')
+        return res.status(400).send('User cannot be activated')
       }
+      const {name,email,password}=user
       let newuser=new User({
         name,
         email,
@@ -15,13 +15,13 @@ const verificationhandler=async (req,res,next)=>{
       })
       try{
         await newuser.save()
-        await user[0].remove()
-      }catch(e){
-        res.json({error:e})
+        await user.remove()
+      }catch{
+        res.status(500).json({message:'Internal server error'})
       }
       res.render('verification',{name})
-    }catch(e){
-      res.json({message:'Could not verify you please try again later'})
+    }catch{
+      res.status(500).json({message:'Could not verify you please try again later'})
     }
 }
 module.exports={

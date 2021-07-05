@@ -6,7 +6,7 @@ let pendinguser;
 try{
 pendinguser=await PendingUser.find({})
 }catch(e){
-    return res.status(500).json({message:e})
+    return res.status(500).json({message:'Internal server error'})
 }
 if(!pendinguser){
     return res.status(404).json({message:"There are no pending users!!"})
@@ -20,7 +20,7 @@ let pendinguserids=req.body.ids
 try{
 pendinguser=await PendingUser.deleteMany({_id:{$in:pendinguserids}})
 }catch(e){
-return res.status(500).json({message:e})
+return res.status(500).json({message:'Internal server error'})
 }
 return res.status(200).json({message:"Deleted successfully !!"})
 }

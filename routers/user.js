@@ -26,11 +26,11 @@ router.post("/resetpassword", usercontroller.resetPassword);
 //Route to get user by id
 router.get("/users/getuser/:uid", usercontroller.getuserbyid);
 //return all the present users
-router.get("/users",usercontroller.getallusers)
+router.get("/users",middleware,usercontroller.getallusers)
 //delete users [an array of id's is passed from client]
 router.delete("/deleteuser",middleware,usercontroller.deleteuser);
 //update user by id
-router.patch("/users/updateuser/:uid", usercontroller.updateuser);
+router.patch("/users/updateuser/:uid",middleware,usercontroller.updateuser);
 //Route to generate email for resetting password
 router.post("/forgotpassword",usercontroller.forgotpass);
 //Route to get all the contests registered by the user

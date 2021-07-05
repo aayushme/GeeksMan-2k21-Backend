@@ -10,7 +10,7 @@ const getUsers = async (req, res, next) => {
       "registeredusers"
     );
   } catch (error) {
-    return res.status(404).json(error);
+    return res.status(500).json({message:'Internal server error'})
   }
   if (
     !contestwithregisteredusers ||
@@ -44,7 +44,7 @@ const registerforcontest = async (req, res, next) => {
       .status(500)
       .json({ message: "Could not register right now,please try again later" });
   }
-  if (!contest) {
+  if(!contest){
     return res
       .status(404)
       .json({
@@ -57,8 +57,7 @@ const registerforcontest = async (req, res, next) => {
       .status(404)
       .json({ message: "Could not find the user,please try again later" });
   }
-  let starttime=new Date(contest.starttime).getTime()
-  
+  let starttime=parseInt(contest.starttime)
    if(Date.now()>starttime){
      return res.status({message:'Registration time is already over!'})
    }
@@ -122,13 +121,13 @@ const registerforcontest = async (req, res, next) => {
         <p>You registered with this email: ${user.email}.<p>
         Your designated slot is ${givenslot}
         Date and time of slot:-${
-          contest.totalslots[givenslot - 1].slotstarttime+'&nbsp;&nbsp;'+contest.totalslots[givenslot-1].slotendtime
+       (new Date(contest.totalslots[givenslot - 1].slotstarttime)).toLocaleString()+'&nbsp;&nbsp;' +'to '+(new Date(contest.totalslots[givenslot-1].slotendtime)).toLocaleString()
         }
         <p>You can simply take the test by clicking at this link at you designated time slot.<a href="https://geeksmanjcbust.in/contests/${
           contest.contestname
         }">Link</a>
-        If you forgot your password, simply hit "Forgot password" and you'll be prompted to reset it.</p>
-        If you have any questions leading up to the event, feel free to reply to cedept@geeksmanjcbust.in.<br>
+        If you have any questions leading up to the event, feel free to reply to cedept@geeksmanjcbust.in or you can also use the geeksman<br>
+        support feature,someone from our team will resolve your doubts<br>
         We look forward to seeing you on EVENT DATE!<br>
         Kind Regards,<br>
         Geeksman Family
@@ -136,9 +135,8 @@ const registerforcontest = async (req, res, next) => {
     };
     mailgun.messages().send(data, function (error, body) {
       if (error) {
-        console.log(error);
+        return res.status(500).json({message:'Slot mail could not be sent,server error'})
       }
-      console.log(body);
     });
     return res
     .status(200)
@@ -146,7 +144,6 @@ const registerforcontest = async (req, res, next) => {
   }else{
     return res.json({message:'Slots are full'})
   }
-  
 };
 const updatedetails = async (req, res, next) => {
   try {

@@ -1,7 +1,6 @@
 const Admin=require('../models/AdminUser')
 const bcrypt = require("bcryptjs");
 const jwt=require('jsonwebtoken');
-const { response } = require('express');
 //creating new admins
 const createadmin=async (req,res,next)=>{
     const {adminname,adminemail,adminPassword}=req.body
@@ -33,7 +32,7 @@ const createadmin=async (req,res,next)=>{
      try{
       await newadmin.save()
      }catch(e){
-       return res.status(500).json({"error":e})
+       return res.status(500).json({message:'Internal server error'})
      }
 
     res.status(201).json({
@@ -48,7 +47,7 @@ const loginadmin= async (req,res,next)=>{
  try {
    existingAdmin = await Admin.findOne({ adminemail });
  } catch (err) {
-   return res.status(500).json({message:e})
+   return res.status(500).json({message:'Internal server error'})
  }
  
  if(!existingAdmin){
@@ -58,7 +57,7 @@ const loginadmin= async (req,res,next)=>{
  try {
    isvalidpasword = await bcrypt.compare(adminPassword, existingAdmin.adminPassword);
  } catch (err) {
-   return res.status(500).json({message:e});
+       return res.status(500).json({message:'Internal server error'})
  }
 
  if(!isvalidpasword){

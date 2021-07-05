@@ -5,19 +5,19 @@ contestname:{
     required:true
 },
 registration_starttime:{
-type:Date,
+type:Number,
 required:true
 },
 registration_endtime:{
-type:Date,
+type:Number,
 required:true
 },
 starttime:{
-    type:Date,
+    type:Number,
     required:true
 },
 endtime:{
-    type:Date,
+    type:Number,
     required:true
 },
 image:{
@@ -36,7 +36,7 @@ questions:[
 },
 ],
 contestduration:{
-type:String,
+type:Number,
 required:true
 },
 prize:{
@@ -51,15 +51,15 @@ registeredusers:[
 ],
 totalslots:[{
   slotno:{
-      type:String,
+      type:Number,
       required:true
   },
   slotstarttime:{
-      type:Date,
+      type:Number,
       required:true
   },
   slotendtime:{
-      type:Date,
+      type:Number,
       required:true
   }  
 }],

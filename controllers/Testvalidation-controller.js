@@ -13,9 +13,11 @@ try{
 try{
     contest=await Contest.findById(cid)
 }catch(e){
-    return res.status(404).json({error:e})
+    return res.status(500).json({message:'Internal server error!'})
 }
-
+if(!contest){
+    return res.status(404).json({message:'Could not find the contest'})
+}
 let uid
 if(decodedToken){    
 uid=decodedToken.userId
@@ -27,8 +29,6 @@ user=await User.findById(uid).populate('usercontestdetail')
 }catch{
 return res.status(500).json({message:'Could not start your test,try again later'})
 }
-
-
 if(user||user.usercontestdetail.length!=0){
     const finduser=user.usercontestdetail.find(user=>user.contestid==cid)
     if(!finduser){
@@ -36,8 +36,8 @@ if(user||user.usercontestdetail.length!=0){
     }
     registeruserid=finduser._id
     slotno=finduser.slot.slotno
-    starttime=new Date(finduser.slot.slotstarttime).getTime()
-    endtime=new Date(finduser.slot.slotendtime).getTime()
+    starttime=finduser.slot.slotstarttime
+    endtime=finduser.slot.slotendtime
     if(finduser.testgiven){
         return res.status(403).json({message:'You have already given the test'});
     }
@@ -65,7 +65,7 @@ Token=jwt.sign({contestId:cid,userId:uid,ruid:registeruserid,slotno:slotno},proc
 }catch(e){
     return res.status(500).json({message:'Could not start your test please try again later'})
 }
-res.status(201).json({Token})
+res.status(200).json({Token})
 }
 module.exports={
     testvalidation
