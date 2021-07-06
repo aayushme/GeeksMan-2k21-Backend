@@ -24,11 +24,7 @@ const signuphandler = async (req, res, next)=>{
     return next(error);
   }
   if (existinguser) {
-    const error = new HttpError(
-      "User is already registered,Please login instead",
-      409
-    );
-    return next(error);
+    return res.status(409).json({message:'User is already registered,Please login instead'})
   }
   if (pendinguser) {
     const error = new HttpError(

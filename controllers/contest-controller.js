@@ -18,7 +18,7 @@ if(startimec>=endtimec){
 }
 let check=false
 totalslots.forEach((slot)=>{
-    const slotstart=new Date(slot.slotendtime).getTime()
+    const slotstart=new Date(slot.slotstarttime).getTime()
     const slotend=new Date(slot.slotendtime).getTime()
     slot.slotstarttime=slotstart
     slot.slotendtime=slotend
@@ -97,7 +97,6 @@ if(idx!=-1){
     contest.testgiven=contest.registeredusers[idx].testgiven
 }
 }
-
 return res.status(200).json({contest:contest.toObject({getters:true})})
 }
 const getallcontests=async (req,res,next)=>{

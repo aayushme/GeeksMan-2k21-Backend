@@ -102,11 +102,11 @@ isregistered:{
     default:false
 },
 teststarttime:{
-    type:Date,
+    type:Number,
     default:null
 },
 testendtime:{
-    type:Date,
+    type:Number,
     default:null
 },
 testgiven:{
