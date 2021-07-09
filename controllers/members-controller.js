@@ -11,13 +11,12 @@ const compare=(arr=>{
 
 const createmember=async (req,res,next)=>{
     const {name,post,companyname,year,image,linkedin,facebook,instagram}=req.body
-    const resimage;
+    let resimage;
     try{
       resimage= await cloudinary.uploader.upload(image,{upload_preset:'Contest-image'})
     }catch(err){
         return res.status(500).json({message:'Member Image upload failed!!'})
     }
-
     const newMember= new Members({
        name,
        post,
@@ -28,7 +27,6 @@ const createmember=async (req,res,next)=>{
        facebook,
        instagram
     })
-
     try{
          await newMember.save();
     }catch(err){
@@ -59,7 +57,6 @@ const getmembers=async (req,res,next)=>{
     for(var i=st ;i<st+imageperpage;i++){
         singlepagemembers.push(allmembers[i])
     }
-
     res.json({members:singlepagemembers.map(memb=>memb.toObject({getters:true}))})
 
 }
