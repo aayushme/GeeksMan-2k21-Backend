@@ -11,7 +11,7 @@ const compare=(arr=>{
 
 const createmember=async (req,res,next)=>{
     const {name,post,companyname,year,image,linkedin,facebook,instagram}=req.body
-    const resimage;
+    let resimage;
     try{
       resimage= await cloudinary.uploader.upload(image,{upload_preset:'Contest-image'})
     }catch(err){
@@ -39,7 +39,7 @@ const createmember=async (req,res,next)=>{
     res.status(201).json({member:newMember.toObject({getters:true})})
 }
 const getmembers=async (req,res,next)=>{
-    const pno=req.query || 0;
+    const pno=parseInt(req.query.pno || "0");
     const imageperpage=3;
     //get all members from schema
     let allmembers
@@ -50,19 +50,35 @@ const getmembers=async (req,res,next)=>{
         return next(error)
 
     }
+   
     //now sort the list of members according to 4th yr > 3rd yr > 2nd yr > 1st yr...
     compare(allmembers)
-
+   
     //we have sorted array so now apply pagination part...
     let singlepagemembers=[]
-    const st=pno*imageperpage
-    for(var i=st ;i<st+imageperpage;i++){
+    const st=parseInt(pno*imageperpage)
+    for(var i=st; i<allmembers.length && i<st+imageperpage;i++){
         singlepagemembers.push(allmembers[i])
     }
-
     res.json({members:singlepagemembers.map(memb=>memb.toObject({getters:true}))})
 
 }
+
+const getmembersforadmin=async(req,res,next)=>{
+    let allmembers
+    try{
+        allmembers= await Members.find({});
+    }catch(err){
+        const error=new HttpError('Something went wrong while fetching members',500)
+        return next(error)
+
+    }
+   
+    //now sort the list of members according to 4th yr > 3rd yr > 2nd yr > 1st yr...
+    compare(allmembers)
+    res.json({members:allmembers});
+}
+
 const updatemember=async (req,res,next)=>{
     const {post,companyname,year}=req.body
     const {mid}=req.params
@@ -87,23 +103,12 @@ const updatemember=async (req,res,next)=>{
 
 }
 const deletemember=async (req,res,next)=>{
-    const {mid}=req.body
-    let membertobeDeleted
+    const {ids}=req.body
+    
     try{
-        membertobeDeleted=await Members.findById(mid)
+       await Members.deleteMany({_id:{$in:ids}})
     }catch(err){
-        const error=new HttpError('Something went wrong while finding this member',500)
-        return next(error)
-    }
-
-    try{
-      const sess=await mongoose.startSession()
-       sess.startTransaction()
-       await membertobeDeleted.remove({session:sess})
-       sess.commitTransaction()
-
-    }catch(err){
-        const error=new HttpError('Something went wrong could not delete this member',500)
+        const error=new HttpError('Something went wrong,could delete members',500)
         return next(error)
     }
 
@@ -113,5 +118,6 @@ module.exports={
     createmember,
     getmembers,
     updatemember,
-    deletemember
+    deletemember,
+    getmembersforadmin
 }
