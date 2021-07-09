@@ -17,7 +17,6 @@ const createmember=async (req,res,next)=>{
     }catch(err){
         return res.status(500).json({message:'Member Image upload failed!!'})
     }
-
     const newMember= new Members({
        name,
        post,
@@ -28,7 +27,6 @@ const createmember=async (req,res,next)=>{
        facebook,
        instagram
     })
-
     try{
          await newMember.save();
     }catch(err){
