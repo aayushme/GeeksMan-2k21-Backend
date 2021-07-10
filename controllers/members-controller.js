@@ -8,19 +8,17 @@ const compare=(arr=>{
         return b.year.charCodeAt(0)-a.year.charCodeAt(0)
     })
 })
-
 const createmember=async (req,res,next)=>{
-    const {name,post,companyname,year,image,linkedin,facebook,instagram}=req.body
+    const {name,post,year,image,linkedin,facebook,instagram}=req.body
     let resimage;
     try{
-      resimage= await cloudinary.uploader.upload(image,{upload_preset:'Contest-image'})
+      resimage= await cloudinary.uploader.upload(image,{upload_preset:'Members-images'})
     }catch(err){
         return res.status(500).json({message:'Member Image upload failed!!'})
     }
     const newMember= new Members({
        name,
        post,
-       companyname,
        year,
        image:resimage.secure_url,
        linkedin,
@@ -48,7 +46,6 @@ const getmembers=async (req,res,next)=>{
         return next(error)
 
     }
-   
     //now sort the list of members according to 4th yr > 3rd yr > 2nd yr > 1st yr...
     compare(allmembers)
    
@@ -71,14 +68,13 @@ const getmembersforadmin=async(req,res,next)=>{
         return next(error)
 
     }
-   
     //now sort the list of members according to 4th yr > 3rd yr > 2nd yr > 1st yr...
     compare(allmembers)
     res.json({members:allmembers});
 }
 
 const updatemember=async (req,res,next)=>{
-    const {post,companyname,year}=req.body
+    const {post,year}=req.body
     const {mid}=req.params
     let reqMember
     try{
@@ -87,9 +83,7 @@ const updatemember=async (req,res,next)=>{
         const error=new HttpError('Something went wrong while finding this member',500)
         return next(error)
     }
-
     reqMember.post=post
-    reqMember.companyname=companyname
     reqMember.year=year
     try{
      await reqMember.save()
@@ -101,8 +95,7 @@ const updatemember=async (req,res,next)=>{
 
 }
 const deletemember=async (req,res,next)=>{
-    const {ids}=req.body
-    
+    const {ids}=req.body   
     try{
        await Members.deleteMany({_id:{$in:ids}})
     }catch(err){
