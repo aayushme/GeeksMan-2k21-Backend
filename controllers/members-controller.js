@@ -55,7 +55,7 @@ const getmembers=async (req,res,next)=>{
     for(var i=st; i<allmembers.length && i<st+imageperpage;i++){
         singlepagemembers.push(allmembers[i])
     }
-    res.json({members:singlepagemembers.map(memb=>memb.toObject({getters:true}))})
+    res.json({members:singlepagemembers.map(memb=>memb.toObject({getters:true})), totalmembers:allmembers.length,imageperpage})
 
 }
 
