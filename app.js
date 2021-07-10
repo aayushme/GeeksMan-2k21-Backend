@@ -52,7 +52,7 @@ app.use(adminrouter)
 
 const io = require("socket.io")(server, {
   cors: {
-    origin:["http://localhost:3000","http://localhost:3001"],
+    origin:'*',
     methods: ["GET", "POST"]
   }});
 
@@ -99,7 +99,10 @@ io.of('/connection').on("connection",(socket)=>{
        await Chatqueuecontroller.removeroom(roomid,adminid)
      }
      removeroom()
-     socket.to(roomid).emit('disconnectclient')
+     socket.broadcast.to(roomid).emit('disconnectclient')
+     socket.on('user-disconnected',()=>{
+       socket.emit('userdisconnect-successfull')
+     })
   }) 
 })
 
