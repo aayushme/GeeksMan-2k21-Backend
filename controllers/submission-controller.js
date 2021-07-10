@@ -22,7 +22,6 @@ const submissionhandler = async (req, res, next) => {
     const contestid = decodedToken.contestId;
     const uid=decodedToken.userId
     let contestuser=await User.findById(uid).populate('usercontestdetail')
-    console.log(contestuser)
     if(!contestuser||contestuser.usercontestdetail.length===0){
         return res.status(404).json({message:'Could not find you as a registered candidate'})
     }
