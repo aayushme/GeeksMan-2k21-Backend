@@ -1,4 +1,5 @@
 const Chatqueue=require('../models/Chatqueue')
+const Message =require('../models/Message')
 const getadminswithroomids=async ()=>{
 let admins=await Chatqueue.find({})
 return admins
@@ -30,9 +31,24 @@ const createadminwithid=async (admin)=>{
     })
     await Admin.save()
 }
+const removeroom=async (roomid,adminid)=>{
+let activeadmin,chats;
+activeadmin=await Chatqueue.findOne({adminid})
+chats=await Message.findOne({roomid})
+if(activeadmin&&chats){
+    let idx=activeadmin.roomids.findIndex((room)=>room.id==roomid)
+    if(idx!=-1){
+      activeadmin.roomids.splice(idx,1)
+      activeadmin.queriesresolved++
+    }
+    await chats.remove()
+    await activeadmin.save()
+}
+}
 module.exports={
     getadminswithroomids,
     saveadmin,
     createadminwithid,
-    getrooms
+    getrooms,
+    removeroom
 }

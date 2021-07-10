@@ -4,7 +4,7 @@ const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
 const port = process.env.PORT || 5000;
 require('dotenv').config()
 mongoose
-  .connect(`${process.env.DATABASE_URL}`, {
+  .connect(`${process.env.DATABASE_URL}`,{
     useUnifiedTopology: true,
     useNewUrlParser: true,
   })

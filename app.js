@@ -94,8 +94,14 @@ io.of('/connection').on("connection",(socket)=>{
     savemsg()
     socket.broadcast.to(roomid).emit('message-to-user',msg,adminid,timestamp)
   })
+  socket.on('endchat',(roomid,adminid)=>{
+     const removeroom=async ()=>{
+       await Chatqueuecontroller.removeroom(roomid,adminid)
+     }
+     removeroom()
+     socket.to(roomid).emit('disconnectclient')
+  }) 
 })
-
 
 app.use((req, res, next) => {
     throw new HttpError("Could not find this route", 404);
