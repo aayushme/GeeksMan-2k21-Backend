@@ -5,6 +5,7 @@ const domain = "geeksmanjcbust.in";
 var mailgun = require("mailgun-js")({ apiKey: api_key, domain: domain });
 const HttpError = require("../models/Http-error");
 const bcrypt = require("bcryptjs");
+const cloudinary=require('cloudinary')
 const jwt = require("jsonwebtoken");
 const PendingUser = require("../models/PendingUser");
 const signuphandler = async (req, res, next)=>{
@@ -150,7 +151,7 @@ const updateuser = async (req, res, next) => {
   }
   let imageresponse;
     try{
-      imageresponse=await cloudinary.uploader.upload(image,{upload_preset:'Users-images'})
+      imageresponse=await cloudinary.uploader.upload(img,{upload_preset:'Users-images'})
     }
     catch(err){
        return res.status(500).json({message:'Image upload failed'})
@@ -181,7 +182,6 @@ const getuserbyid = async (req, res, next) => {
     );
     return next(error);
   }
-
   if (!user) {
     const error = new HttpError("Could not find a user with that id", 404);
   }
