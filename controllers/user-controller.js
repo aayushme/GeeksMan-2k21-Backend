@@ -134,7 +134,7 @@ const updateuser = async (req, res, next) => {
   const { year, phoneno,img,college,Branch,} = req.body;
   let user;
   try {
-    user = await User.findById(userid,['-password']).populate('usercontestdetail');
+    user = await User.findById(userid,['-password']);
   } catch (err){
     return next(
       new HttpError("Something went wrong please try again later", 500)
@@ -167,13 +167,13 @@ const updateuser = async (req, res, next) => {
       new HttpError("Could not update the user,please try again later", 500)
     );
   }
-  res.status(200).json({ user: user.toObject({ getters: true }) });
+  res.status(200).json({message:'Profile updated successfully'});
 };
 const getuserbyid = async (req, res, next) => {
   const userid = req.params.uid;
   let user;
   try {
-    user = await User.findById(userid);
+    user = await User.findById(userid,['-password']).populate('usercontestdetail');
   } catch (err) {
     const error = new HttpError(
       "Something went wrong could not fetch user please try again later",
