@@ -131,11 +131,11 @@ const loginhandler = async (req, res, next) => {
 };
 const updateuser = async (req, res, next) => {
   const userid = req.params.uid;
-  const { name, year, phoneno,img,college,Branch,} = req.body;
+  const { year, phoneno,img,college,Branch,} = req.body;
   let user;
   try {
-    user = await User.findById(userid);
-  } catch (err) {
+    user = await User.findById(userid,['-password']).populate('usercontestdetail');
+  } catch (err){
     return next(
       new HttpError("Something went wrong please try again later", 500)
     );
@@ -156,7 +156,6 @@ const updateuser = async (req, res, next) => {
        return res.status(500).json({message:'Image upload failed'})
     }
             user.profilePhotoLocation=imageresponse.secure_url
-            user.name = name;
             user.year = year;
             user.phoneno = phoneno;
             user.college = college;
