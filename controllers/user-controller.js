@@ -131,7 +131,7 @@ const loginhandler = async (req, res, next) => {
 };
 const updateuser = async (req, res, next) => {
   const userid = req.params.uid;
-  const { name, year, phoneno, college, Branch } = req.body;
+  const { name, year, phoneno,img,college,Branch,} = req.body;
   let user;
   try {
     user = await User.findById(userid);
@@ -148,11 +148,19 @@ const updateuser = async (req, res, next) => {
       )
     );
   }
-  if (name) user.name = name;
-  if (year) user.year = year;
-  if (phoneno) user.phoneno = phoneno;
-  if (college) user.college = college;
-  if (Branch) user.Branch = Branch;
+  let imageresponse;
+    try{
+      imageresponse=await cloudinary.uploader.upload(image,{upload_preset:'Users-images'})
+    }
+    catch(err){
+       return res.status(500).json({message:'Image upload failed'})
+    }
+            user.profilePhotoLocation=imageresponse.secure_url
+            user.name = name;
+            user.year = year;
+            user.phoneno = phoneno;
+            user.college = college;
+            user.Branch = Branch;
   try {
     await user.save();
   } catch (err) {
