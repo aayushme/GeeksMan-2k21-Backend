@@ -5,7 +5,7 @@ const domain = "geeksmanjcbust.in";
 var mailgun = require("mailgun-js")({ apiKey: api_key, domain: domain });
 const HttpError = require("../models/Http-error");
 const bcrypt = require("bcryptjs");
-const cloudinary=require('cloudinary')
+const {cloudinary}=require('../Cloudinaryconfig/Cloudinary')
 const jwt = require("jsonwebtoken");
 const PendingUser = require("../models/PendingUser");
 const signuphandler = async (req, res, next)=>{
