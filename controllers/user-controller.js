@@ -134,10 +134,11 @@ const updateuser = async (req, res, next) => {
   const userid = req.params.uid;
   const allowedupdates=['year','profilePhotoLocation','phoneno','college','Branch']
   const updates=Object.keys(req.body)
-  if(profilePhotoLocation in req.body){
+  const {profilePhotoLocation}=req.body
+  if(profilePhotoLocation){
     let imageresponse;
     try{
-      imageresponse=await cloudinary.uploader.upload(img,{upload_preset:'Users-images'})
+      imageresponse=await cloudinary.uploader.upload(profilePhotoLocation,{upload_preset:'Users-images'})
     }
     catch(err){
        return res.status(500).json({message:'Image upload failed'})
