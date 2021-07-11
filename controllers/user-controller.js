@@ -132,42 +132,32 @@ const loginhandler = async (req, res, next) => {
 };
 const updateuser = async (req, res, next) => {
   const userid = req.params.uid;
-  const { year, phoneno,img,college,Branch,} = req.body;
-  let user;
-  try {
-    user = await User.findById(userid,['-password']);
-  } catch (err){
-    return next(
-      new HttpError("Something went wrong please try again later", 500)
-    );
-  }
-  if (!user) {
-    return next(
-      new HttpError(
-        "Could not find a user with that id,please try again later",
-        404
-      )
-    );
-  }
-  let imageresponse;
+  const allowedupdates=['year','profilePhotoLocation','phoneno','college','Branch']
+  const updates=Object.keys(req.body)
+  if(profilePhotoLocation in req.body){
+    let imageresponse;
     try{
       imageresponse=await cloudinary.uploader.upload(img,{upload_preset:'Users-images'})
     }
     catch(err){
        return res.status(500).json({message:'Image upload failed'})
     }
-            user.profilePhotoLocation=imageresponse.secure_url
-            user.year = year;
-            user.phoneno = phoneno;
-            user.college = college;
-            user.Branch = Branch;
-  try {
-    await user.save();
-  } catch (err) {
+    req.body.profilePhotoLocation=imageresponse.secure_url
+  }
+  const isvalidoperation=updates.every((update)=>{
+    return allowedupdates.includes(update)
+  })
+  if(!isvalidoperation){
+    return res.status(400).json({message:'Invalid update data'})
+  }
+  try{
+    const user = await User.findByIdAndUpdate(userid,req.body,{runValidators:true});
+  }catch (err){
     return next(
-      new HttpError("Could not update the user,please try again later", 500)
+      new HttpError("Something went wrong please try again later", 500)
     );
   }
+
   res.status(200).json({message:'Profile updated successfully'});
 };
 const getuserbyid = async (req, res, next) => {
