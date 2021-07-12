@@ -1,4 +1,5 @@
 const express = require("express");
+const spdy=require('spdy')
 const bodyparser = require("body-parser");
 const HttpError=require('./models/Http-error')
 const userrouter=require('./routers/user')
@@ -20,8 +21,7 @@ const mongoose=require('mongoose')
 const cors=require('cors')
 require('dotenv').config()
 const app = express();
-// const server = require("http").createServer(app);
-const server=require('spdy').createServer({},app)
+const server = require("http").createServer(app);
 app.use(cors())
 app.use(bodyparser.urlencoded({ limit:'50mb',extended: true }));
 app.use(bodyparser.json({limit:'50mb'}));
