@@ -104,7 +104,12 @@ return res.status(200).json({contest:contest.toObject({getters:true})})
 const getallcontests=async (req,res,next)=>{
 let contests;
 try{
+if(req.query.event_sub_category)
 contests=await Contest.find({contesttype:req.query.event_sub_category},['-questions'])
+
+if(!req.query.event_sub_category)
+contests=await Contest.find({},['-questions'])
+
 }catch(err){
 return next(new HttpError("Could not fetch the contests,please try again later",500))
 }
