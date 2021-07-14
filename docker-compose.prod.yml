@@ -3,12 +3,11 @@ services:
     nginx:
         ports: 
             - "80:80"
-     
     node-app:
         build: 
             context: . 
             args:
                 NODE_ENV: production
-        environment: 
-            - NODE_ENV=production
+        env_file: 
+            - './config/dev.env'
         command:    node server.js

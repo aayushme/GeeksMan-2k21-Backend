@@ -12,7 +12,5 @@ services:
             - ./:/app
             - /app/node_modules
         env_file: 
-            - ./.env    
-        environment: 
-            - NODE_ENV=development 
+            - ./config/dev.env    
         command:    npm run dev
