@@ -1,5 +1,4 @@
 const express = require("express");
-const spdy=require('spdy')
 const bodyparser = require("body-parser");
 const HttpError=require('./models/Http-error')
 const userrouter=require('./routers/user')
@@ -17,7 +16,6 @@ const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
 const chatqueuerouter=require('./routers/Chatqueue')
 const chatscontroller=require('./controllers/Chat-controller')
 const chatsrouter=require('./routers/Chats')
-const mongoose=require('mongoose')
 const cors=require('cors')
 require('dotenv').config()
 const app = express();
@@ -30,8 +28,6 @@ app.use(express.static('./public'))
 
 //for trusting the headers attached by nginx
 app.enable("trust proxy")
-
-
 
 //Routes
 // app.get("/",(req,res)=>{
