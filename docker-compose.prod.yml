@@ -8,17 +8,7 @@ services:
             context: . 
             args:
                 NODE_ENV: production
-        environment: 
-            - DATABASE_URL=${DATABASE_URL}
-            - JWT_KEY=${JWT_KEY}
-            - EMAIL_KEY=${EMAIL_KEY}
-            - BACKEND_URL=${BACKEND_URL}
-            - JWTADMIN_KEY=${JWTADMIN_KEY}
-            - JWTCONTEST_KEY=${JWTCONTEST_KEY}
-            - NODE_ENV=production
-            - JWTRESET_KEY=${JWTRESET_KEY}
-            - cloud_name=${cloud_name}
-            - api_key=${api_key}
-            - api_secret=${api_secret}
+        env_file: 
+            - ../.env
         command:    node server.js
     
