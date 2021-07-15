@@ -14,3 +14,4 @@ services:
         env_file: 
             - ./config/dev.env    
         command:    npm run dev
+        
