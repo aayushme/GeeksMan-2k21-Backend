@@ -27,11 +27,10 @@ services:
             - app-network
     letsencrypt:
         image: quay.io/letsencrypt/letsencrypt:latest
-        ports: 
-            - "443:443"
         volumes: 
             - /etc/letsencrypt:/etc/letsencrypt 
-            - /var/lib/letsencrypt:/var/lib/letsencrypt 
+            - /var/lib/letsencrypt:/var/lib/letsencrypt
+            -/usr/share/nginx/html:/usr/share/nginx/html 
         command: certonly -n -m paragthakur56@gmail.com -d geeksbackend.centralindia.cloudapp.azure.com --standalone --agree-tos    
 #     mongo:
 #         image: mongo
