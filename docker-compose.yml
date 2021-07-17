@@ -17,6 +17,7 @@ services:
         restart: unless-stopped    
         depends_on:
             - node-app
+            - letsencrypt
     redis:
         image: redis
     letsencrypt:
