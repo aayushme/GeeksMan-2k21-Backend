@@ -41,4 +41,10 @@ services:
 volumes:
     certbot-etc:
     certbot-var:
-    web-root:            
+    web-root:    
+     driver: local
+     driver_opts:
+      type: none
+      device: /home/Parag56/app/views/
+      o: bind
+        
