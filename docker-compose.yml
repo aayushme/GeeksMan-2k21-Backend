@@ -19,17 +19,15 @@ services:
             - node-app
     redis:
         image: redis
-    certbot:
-        image: certbot/certbot
-        volumes:
-            - certbot-etc:/etc/letsencrypt
-            - certbot-var:/var/lib/letsencrypt
-        depends_on: 
-            - nginx
-        command: certonly --webroot --webroot-path=/var/www/html --email sammy@example.com --agree-tos --no-eff-email --staging -d example.com  -d www.example.com
-volumes:
-    certbot-etc:
-    certbot-var:        
+    letsencrypt:
+        image: quay.io/letsencrypt/letsencrypt:latest
+        ports: 
+            - "80:80"
+            - "443:443"
+        volumes: 
+            - /etc/letsencrypt:/etc/letsencrypt 
+            - /var/lib/letsencrypt:/var/lib/letsencrypt 
+        command: certonly -n -m paragthakur56@gmail.com -d geeksbackend.centralindia.cloudapp.azure.com --standalone --agree-tos    
 #     mongo:
 #         image: mongo
 #         environment: 
