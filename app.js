@@ -16,6 +16,8 @@ const Chatqueuecontroller=require('./controllers/Chatqueue-controller')
 const chatqueuerouter=require('./routers/Chatqueue')
 const chatscontroller=require('./controllers/Chat-controller')
 const chatsrouter=require('./routers/Chats')
+const roomrouter=require('./routers/rooms')
+const roomcontroller=require('./controllers/room-controller')
 const cors=require('cors')
 require('dotenv').config()
 const app = express();
@@ -29,10 +31,10 @@ app.use(express.static('./public'))
 //for trusting the headers attached by nginx
 app.enable("trust proxy")
 
-//Routes
-// app.get("/",(req,res)=>{
-//   res.render('upload')
-// })
+// Routes
+app.get("/",(req,res)=>{
+  res.send('Welcome to the backend')
+})
 app.use(chatsrouter)
 app.use(chatqueuerouter)
 app.use(uploadfilerouter)
@@ -46,12 +48,13 @@ app.use(verificationroute)
 app.use(registeredusersrouter)
 app.use(submissionrouter)
 app.use(adminrouter)
+app.use(roomrouter)
 
 const io = require("socket.io")(server, {
-  cors: {
+cors:{
     origin:'*',
     methods: ["GET", "POST"]
-  }});
+}});
 
 io.of('/connection').on("connection",(socket)=>{
   socket.on("join-room-user-firsttime", (roomid,username)=>{
@@ -67,6 +70,7 @@ io.of('/connection').on("connection",(socket)=>{
      });
      admin.roomids.push({id:roomid,username})
      await Chatqueuecontroller.saveadmin(admin)
+     await roomcontroller.setroomid(roomid)
      socket.emit('joined','successfull')
     }
     assignadmin()
@@ -94,6 +98,7 @@ io.of('/connection').on("connection",(socket)=>{
   socket.on('endchat',(roomid,adminid)=>{
      const removeroom=async ()=>{
        await Chatqueuecontroller.removeroom(roomid,adminid)
+       await roomcontroller.removeroomid(roomid)
      }
      removeroom()
      socket.broadcast.to(roomid).emit('disconnectclient')
@@ -102,16 +107,15 @@ io.of('/connection').on("connection",(socket)=>{
      })
   }) 
 })
-
 app.use((req, res, next) => {
     throw new HttpError("Could not find this route", 404);
-  });
-  app.use((error, req, res, next) => {
-    if (res.headerSent) {
+});
+app.use((error, req, res, next) => {
+if (res.headerSent) {
       return next(error);
-    }
-    res
-      .status(error.code || 500)
-      .json({ message: error.message || "An unknown error occured" });
-  });
+}
+res
+.status(error.code || 500)
+.json({ message: error.message || "An unknown error occured" });
+});
 module.exports=server

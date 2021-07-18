@@ -1,6 +1,6 @@
 const Contest = require('../models/Contest')
 const HttpError=require('../models/Http-error')
-const url = require('url');
+const redisClient=require('../Redis-client/redisclient')
 const {cloudinary}=require('../Cloudinaryconfig/Cloudinary')
 const createcontest=async (req,res,next)=>{
 const {contestname,image,starttime,endtime,prize,contestdetail,venue,noofquestions,contestduration,totalslots,slotstrength,rules,contesttype}=req.body
@@ -102,14 +102,33 @@ if(idx!=-1){
 return res.status(200).json({contest:contest.toObject({getters:true})})
 }
 const getallcontests=async (req,res,next)=>{
-let contests;
+let contests,found=0;
+//If the client is not logged in then checking the contests in the cache
+if(!req.userid){
+    const keyname=req.query.event_sub_category?req.query.event_sub_category:'allcontests'
+    redisClient.get(keyname,async (error,contests)=>{
+        if(error){
+            console.log(error)
+            return res.json({message:'error failed'})
+        }
+       if(contests!==null){
+        found=1;
+        return res.status(200).json({contests:JSON.parse((contests))})
+       }
+    })
+}
+//cache is only set if the client is not logged in 
 try{
-if(req.query.event_sub_category)
+if(req.query.event_sub_category){
 contests=await Contest.find({contesttype:req.query.event_sub_category},['-questions'])
-
-if(!req.query.event_sub_category)
+if(!req.userid)
+redisClient.SET(`${req.query.event_sub_category}`,JSON.stringify(contests))
+}else{
 contests=await Contest.find({},['-questions'])
-
+if(!req.userid){
+redisClient.SET('allcontests',JSON.stringify(contests))
+}
+}
 }catch(err){
 return next(new HttpError("Could not fetch the contests,please try again later",500))
 }
@@ -119,7 +138,6 @@ try{
 }catch(e){
     return res.status(500).json({message:e})
 }
-
 if(req.userid){
     if(contestregister.length!==0)
     contestregister.forEach((contest,index)=>{
@@ -132,10 +150,10 @@ if(req.userid){
         }
     })
 }
-if(contests.length===0){
+if(contests.length===0&&found===0){
     return res.status(200).json({contests:[]})
-}
-res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:true}))})
+}else if(contests.length!==0&&found==0)
+return res.status(200).json({contests:contests.map(contest=>contest.toObject({getters:true}))})
 }
 
 const deletecontest=async (req,res,next)=>{

@@ -5,8 +5,6 @@ services:
         image: parag56/geeksman-backend
         container_name: nodejs
         restart: unless-stopped
-        networks:
-            - app-network
     nginx:
         image: nginx:stable-alpine
         ports: 
@@ -18,19 +16,15 @@ services:
         restart: unless-stopped    
         depends_on:
             - node-app
-            - letsencrypt
-        networks:
-            - app-network    
+            - letsencrypt    
     redis:
         image: redis
-        networks:
-            - app-network
     letsencrypt:
         image: quay.io/letsencrypt/letsencrypt:latest
         volumes: 
             - /etc/letsencrypt:/etc/letsencrypt 
             - /var/lib/letsencrypt:/var/lib/letsencrypt
-            -/usr/share/nginx/html:/usr/share/nginx/html 
+            # -/usr/share/nginx/html:/usr/share/nginx/html 
         command: certonly -n -m paragthakur56@gmail.com -d geeksbackend.centralindia.cloudapp.azure.com --standalone --agree-tos    
 #     mongo:
 #         image: mongo
@@ -39,6 +33,3 @@ services:
 #             - MONGO_INITDB_ROOT_PASSWORD=Hello
 #         volumes: 
 #             - mongo-db:/data/db
-networks:
-    app-network:
-      driver: bridge
