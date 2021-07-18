@@ -32,4 +32,11 @@ services:
 #             - MONGO_INITDB_ROOT_USERNAME=Parag
 #             - MONGO_INITDB_ROOT_PASSWORD=Hello
 #         volumes: 
+<<<<<<< HEAD
 #             - mongo-db:/data/db
+=======
+#             - mongo-db:/data/db
+networks:
+    app-network:
+      driver: bridge
+>>>>>>> 0cf4d244613dfab3daf467160418303ae2f9d399
