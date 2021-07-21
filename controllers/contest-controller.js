@@ -79,7 +79,6 @@ res.status(200).json({contest:contest.toObject({getters:true})})
 
 const getcontest=async (req,res,next)=>{
 const contestid=req.params.cid
-
 let contest;
 try{
 contest=await Contest.findById(contestid,['-questions']).populate('registeredusers')
@@ -102,35 +101,32 @@ if(idx!=-1){
 return res.status(200).json({contest:contest.toObject({getters:true})})
 }
 const getallcontests=async (req,res,next)=>{
-let contests,found=0;
-//If the client is not logged in then checking the contests in the cache
-if(!req.userid){
+let found=0,contests;
+//checking for contests in the cache
     const keyname=req.query.event_sub_category?req.query.event_sub_category:'allcontests'
-    redisClient.get(keyname,async (error,contests)=>{
-        if(error){
-            console.log(error)
-            return res.json({message:'error failed'})
-        }
-       if(contests!==null){
+    redisClient.get(keyname,async (error,contestlist)=>{
+
+       if(contestlist!==null){
         found=1;
-        return res.status(200).json({contests:JSON.parse((contests))})
+        if(!req.userid)
+        return res.status(200).json({contests:JSON.parse((contestlist))})
+        else
+        contests=JSON.parse(contestlist)
        }
     })
-}
-//cache is only set if the client is not logged in 
+if(!contests){
 try{
 if(req.query.event_sub_category){
 contests=await Contest.find({contesttype:req.query.event_sub_category},['-questions'])
-if(!req.userid)
 redisClient.SET(`${req.query.event_sub_category}`,JSON.stringify(contests))
 }else{
 contests=await Contest.find({},['-questions'])
-if(!req.userid){
 redisClient.SET('allcontests',JSON.stringify(contests))
 }
 }
-}catch(err){
+catch(err){
 return next(new HttpError("Could not fetch the contests,please try again later",500))
+}
 }
 let contestregister
 try{

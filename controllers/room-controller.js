@@ -18,7 +18,7 @@ room=await Room.findOne({roomid})
 return res.status(500).json({message:'Internal server error'})
 }
 if(!room){
-    return res.status(404).json({message:'Your chat has already been ended'})
+    return res.status(200).json({message:'ended'})
 }else{
     return res.status(200).json({message:room.roomid})
 }
