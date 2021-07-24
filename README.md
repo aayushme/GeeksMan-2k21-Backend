@@ -11,8 +11,25 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Students can register for the contest and time for their slot is sent via an email.
 * Support feature is also there if a student have any doubt they can use it to contact the admins.
 
+## Technology stack and platforms used
+### For Backend
+* Express
+* mongodb
+* Nginx
+* docker
+* Redis
+* Azure 
+* cloudinary
+* Npm packages 
+
+### For Frontend
+* Axios
+* React
+* Redux
+* Material-ui
+
 ## Try it out on
- [LINK](https://geeksmanjcbust.in)
+ [geeksman](https://geeksmanjcbust.in)
 
 
 ## Upcoming updates
@@ -22,7 +39,7 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Testing using jest 
 
 ## Installation Guide
-# To setup the project using docker :-
+# To setup the backend project using docker :-
 * Install docker and docker-compose on your machine
 * Add an env file name dev.env inside the config folder with the env variables shown in example.env
 * Type the following command to run the development docker container
@@ -30,10 +47,16 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 
 
 
-# To setup on host from source code
+# To setup the backend on host from source code
 * Add an env file name dev.env inside the config folder with the env variables shown in example.env
 * Type the following command to start the server
 * npm run dev
+
+# To setup the frontend on host from source code
+* First install node modules inside the frontend folder using npm i command
+* Type the following command to start the local development server
+* npm start
+
 
 ## Communication
 Feel free to discuss email us at cedept@geeksmanjcbust.in
