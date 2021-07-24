@@ -44,7 +44,7 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Testing using jest 
 
 ## Installation Guide
-# To setup the backend project using docker :-
+# To setup the backend using docker :-
 * Install docker and docker-compose on your machine
 * Add an env file name dev.env inside the config folder with the env variables shown in example.env
 * Type the following command to run the development docker container
