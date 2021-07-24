@@ -18,15 +18,20 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Nginx
 * docker
 * Redis
-* Azure 
+* socket.io
 * cloudinary
+* Jest
 * Npm packages 
+* Azure
+* Mongodb Atlas
 
 ### For Frontend
 * Axios
 * React
 * Redux
 * Material-ui
+* Npm packages
+* Netlify
 
 ## Try it out on
  [geeksman](https://geeksmanjcbust.in)
