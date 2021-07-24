@@ -10,6 +10,8 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Lists all the upcoming ,ongoing and past contests.
 * Students can register for the contest and time for their slot is sent via an email.
 * Support feature is also there if a student have any doubt they can use it to contact the admins.
+* Users can check their past given contests and their marks and rank in that respective contest and can also update their profile.
+* If user forgot their password they can reset it using forgot password.
 
 ## Technology stack and platforms used
 ### For Backend
@@ -42,15 +44,14 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Chat bot 
 * security improvements
 * Testing using jest 
+* Container orchestrator
 
 ## Installation Guide
 # To setup the backend using docker :-
 * Install docker and docker-compose on your machine
 * Add an env file name dev.env inside the config folder with the env variables shown in example.env
 * Type the following command to run the development docker container
-* sudo docker-commpose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
-
-
+* sudo docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 # To setup the backend on host from source code
 * Add an env file name dev.env inside the config folder with the env variables shown in example.env
@@ -62,15 +63,5 @@ Geeksman is the Contest Website of Geeksman the official Coding club of CE Depar
 * Type the following command to start the local development server
 * npm start
 
-
 ## Communication
 Feel free to discuss email us at cedept@geeksmanjcbust.in
-
-
-
-
-
-
-
-
-
