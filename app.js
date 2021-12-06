@@ -52,8 +52,16 @@ app.use(roomrouter)
 
 const io = require("socket.io")(server, {
 cors:{
-    origin:'*',
-    methods: ["GET", "POST"]
+    origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+  ],
 }});
 
 io.of('/connection').on("connection",(socket)=>{
